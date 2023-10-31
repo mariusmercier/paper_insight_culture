@@ -1,0 +1,241 @@
+---
+title: "Electronic Supplementary Material"
+author: "Marius Mercier"
+date: "2023-10-31"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    toc_depth: 2
+output_file: "ESM.pdf" # this does not work :(
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+# Set options for kableExtra
+options(knitr.table.format = "latex")
+```
+
+```{r libraries}
+#Charge necessary libraries for this file
+library(kableExtra)
+library(tidyverse)
+library(lme4)
+library(lmerTest)
+library(jtools)
+```
+
+The Electronic Supplementary Material include more information on the Ethnographical Review (section 1), provide pre-registered analysis not presented in the paper for concision (section 2), and provide all the regression table of the analysis presented in the paper both with and without controls (section 3). Finally, we include the meta-analysis and the plot (section 4). This pdf file is generated using the RMarkdown file "All_analysis.Rmd". All scripts used for the data processing and statistical analysis can be found following this Github link: <https://github.com/mariusmercier/paper_insight_culture>. Simply copy the github and run the Rmd file. A permanent archive is also available at the following OSF project: <https://osf.io/7qwt2/>.
+
+# 1. Ethnographic Review
+
+Nowadays, riddles have lost their once prominent place in the playground to other more attractive cultural products. Nevertheless, we still have the trace of what the children's folklore looked like in the 1960s thanks to the work of the Opie couple. As it is possible that Opie & Opie has put forward an idiosyncratic cultural practice, we conducted a search in the Human Relations Area Files anthropological database (eHRAF: World Cultures database) to see if there were any traces of riddles outside of the Anglo-Saxon culture. We searched for the words "riddle", "enigma", "puzzle" and "conundrum" in July 2022. Unfortunately, it is common for researchers to refer to something they do not understand as a riddle, a puzzle or an enigma which makes it difficult to detect ethnographic reports on these cultural practices. Therefore, we restricted our search to the paragraphs already coded in the "Game" category. This research allowed us to identify 43 cultures where the practice of riddles is common.
+
+The majority of the identified cultural groups are in Africa (N = 16) and in Asia (N = 13). For instance, the Maasai people have a riddle saying "I have two skins, one to lie on and the other to cover myself with. What are they?" (Hollis, 1905). The answer "the bare ground and the sky" showed a typical reconstruction of the mental representation of "skin" similar to what we can find in insight problems. Riddles were found in other continents and areas such as Europe (N = 2), Middle East (N = 1), Middle America & the Caribbean (N = 5), North America (N = 4), South America (N = 1) and Oceania (N = 1).
+
+To control for the possibility that this cultural practice was culturally transmitted from one or several common sources, we make use of the Probability Sample Files (PSF). The PSF is a subset of 60 unrelated culture, largely preindustrial, that meet certain data quality controls. One culture is randomly chosen from each culture area.(For more information see: <https://hraf.yale.edu/resources/reference/probability-sample-files-psf/>). 18 out of 60 cultures had records of riddles.
+
+```{r displaying HRAF data}
+hraf_d = read.csv("data/hraf_data.csv")
+
+hraf_d[, 1:5] %>%
+  kable("latex", booktabs = TRUE, longtable = TRUE, caption = "HRAF survey of ethnographics records of culture.") %>%
+  column_spec(1, width = "3cm") %>% 
+  column_spec(2, width = "5cm") %>%
+  column_spec(4, width = "3cm") %>% 
+  kable_styling(latex_options = c("striped", "repeat_header", "hold_position"))
+
+```
+
+# 2. Pre-registered analysis not presented
+
+## Study 1
+
+```{r pre-processing S1}
+
+#Charge the dataset
+data_1 = read.csv("data/studies/exp_1.csv")
+demo_1 = read.csv("data/studies/demographics_1.csv")
+
+#As preregistred, exclude participants that do not understand the Aha experience
+data_1 = data_1 %>% filter(Q4.2_understanding == "1" )
+
+#Create a binary variable for actual_consumption (1 if participants continue the xp, 0 otherwise)
+data_1$implicit_motivation[data_1$implicit_motivation == "2"] = "0"
+data_1$actual_consumption = as.numeric(data_1$implicit_motivation)
+
+#Create a variable for the mean insight
+
+df_insight = data_1 %>%
+  select(ends_with("insight") | ResponseId)
+
+df_insight[,1:6] = sapply(df_insight[,1:6],as.numeric)
+
+df_insight[is.na(df_insight)] = 0
+
+df_insight = df_insight %>%
+  group_by(ResponseId) %>%
+  mutate(insight_mean = (X11_insight + X12_insight + X15_insight + X14_insight + X16_insight + X40_insight) / 3)
+
+data_1$insight_mean = df_insight$insight_mean
+
+#Create a variable for the mean sharing
+
+df_sharing = data_1 %>%
+  select(ends_with("sharing") | ResponseId)
+
+df_sharing[,1:6] = sapply(df_sharing[,1:6],as.numeric)
+
+df_sharing[is.na(df_sharing)] = 0
+
+df_sharing = df_sharing %>%
+  mutate(sharing_mean = (X11_sharing + X12_sharing + X15_sharing + X14_sharing
+     + X16_sharing + X40_sharing) / 3)
+
+data_1$sharing_mean = df_sharing$sharing_mean
+
+#Create of the ability variable
+
+df_ability = data_1 %>%
+  select(ends_with("solved") | ResponseId)
+
+df_ability[,1:6] = sapply(df_ability[,1:6],as.numeric)
+
+df_ability[is.na(df_ability)] = 0
+
+# Only 1 correspond to the solved problem.
+df_ability[df_ability == 2] = 0
+df_ability[df_ability == 3] = 0
+
+df_ability = df_ability %>%
+  group_by(ResponseId) %>%
+  mutate(ability = (X11_solved + X12_solved + X15_solved + X14_solved
+                    + X16_solved + X40_solved))
+
+data_1$ability = df_ability$ability
+
+
+#Creation of the "not_understood" variable
+df_underst = data_1 %>%
+  select(ends_with("solved") | ResponseId)
+
+df_underst[,1:6] = sapply(df_underst[,1:6],as.numeric)
+
+df_underst[is.na(df_underst)] = 0
+
+df_underst[df_underst== 1] = 0
+df_underst[df_underst== 2] = 0
+df_underst[df_underst== 3] = 1
+
+df_underst = df_underst %>%
+  group_by(ResponseId) %>%
+  mutate(not_understood = (X11_solved + X12_solved + X15_solved + X14_solved
+                    + X16_solved + X40_solved))
+
+data_1$not_understood = df_underst$not_understood
+
+# creation of the time variable
+df_time = data_1 %>%
+  select(ends_with("Page.Submit") | ResponseId)
+
+df_time[,1:6] = sapply(df_time[,1:6],as.numeric)
+df_time[is.na(df_time)] = 0
+
+df_time = df_time %>%
+  mutate(mean_RT = rowSums(df_time[,1:6], na.rm = FALSE))
+
+#mean_RT is transformed in log
+df_time = df_time %>%
+  mutate(mean_RT = (mean_RT/3)) %>%
+  mutate(mean_RT = log(mean_RT))
+
+#we correct for inconsistent naming
+df_time = rename(df_time, 
+       X11_time_Page.Submit = X11_Q5.1_Page.Submit,
+       X12_time_Page.Submit = X12_Q5.1_Page.Submit,
+       X15_time_Page.Submit = X15_Q5.1_Page.Submit
+       )
+
+data_1$mean_RT = df_time$mean_RT
+
+# creation of the panel data for the LMM: 
+df_sharing$condition = data_1$condition
+
+pdata = merge(df_sharing, df_insight, by = "ResponseId")
+
+pdata = merge(pdata, df_ability, by = "ResponseId")
+
+pdata = merge(pdata, df_time, by = "ResponseId")
+
+data_long = pdata %>%
+  pivot_longer(cols = c(ends_with("sharing"), ends_with("insight"), ends_with("solved"), ends_with("Page.Submit")),
+               names_to = c("stumpers", ".value"),
+               names_sep =  "_")
+
+#Because we used pivot_longer with a between participants conditions, data points were created for the two conditions for each participants,
+#introducing 0's for the condition where the participant did not take part. We exclude these data points:
+
+data_long = data_long %>%
+  filter(insight != 0)
+
+#Since ability also include the problem, we construct ability_others corresponding to the score of the participant on the two others problems.
+
+data_long = data_long %>%
+  mutate(ability_other = ability - solved)
+
+data_High = data_long %>%
+  filter(condition == 1)
+
+data_Low = data_long %>%
+  filter(condition == 0)
+
+#for the description of participants 
+
+demo_1 = demo_1 %>%
+  filter(Sex != "CONSENT REVOKED")
+
+demo_1$PROLIFIC_PID = demo_1$participant_id
+
+df1 = merge(x = data_1, y = demo_1, by = "PROLIFIC_PID", all.x = TRUE)
+```
+
+As pre-registered, we conducted a within participants analysis at the level of the problem to test the following hypothesis.
+
+**H1.4:** Within each condition participants will be more willing to share a problem for which they had a higher insight.
+
+```{r, echo = TRUE}
+lmm1 = lmer(scale(sharing) ~ scale(insight) + factor(solved) + ability_other + log(time) + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_High, control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+
+lmm2 = lmer(scale(sharing) ~ scale(insight) + factor(solved) + ability_other + log(time) + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_Low, control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+```
+
+```{r Regression table}
+
+export_summs(lmm1, lmm2, robust = c("HC1", "HC1"), 
+             model.names = c("Sharing Motivation, High Insight condition", "Sharing Motivation, Low Insight condition"), digits = 4,
+             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC"))
+```
+## Study 2
+
+## Study 3
+
+# 3. Main Analysis
+
+## Study 1
+
+## Study 2
+
+## Study 3
+
+## Study 4
+
+## Study 5
+
+# 4. Meta-Analysis
