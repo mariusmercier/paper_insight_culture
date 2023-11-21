@@ -1,31 +1,38 @@
 ---
 title: "Electronic Supplementary Material"
-author: "Marius Mercier"
-date: "2023-10-31"
-output: 
+author: "Marius Mercier, Alexis Garsmeur, Hugo Mercier"
+date: "2023-11-01"
+output:
   pdf_document:
     latex_engine: xelatex
-    toc: true
+    toc: yes
     toc_depth: 2
-output_file: "ESM.pdf" # this does not work :(
+header-includes:
+  - \usepackage{placeins}
 ---
 
 ```{r setup, echo = FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results = 'asis')
 # Set options for kableExtra
 options(knitr.table.format = "latex")
 ```
 
 ```{r libraries}
 #Charge necessary libraries for this file
-library(kableExtra)
+library(kableExtra) # for the HRAF table
 library(tidyverse)
 library(lme4)
-library(lmerTest)
-library(jtools)
+library(lmerTest) # calculating p-values for LMER
+library(jtools) # for export_summs function
+library(effsize) # for Cohen's d
+library(margins) # Marginal effect for Probit GLM
+library(metafor) # Meta-analysis
+library(ggh4x) # function faced_nested for meta-analysis plot
+library(huxtable)
 ```
 
-The Electronic Supplementary Material include more information on the Ethnographical Review (section 1), provide pre-registered analysis not presented in the paper for concision (section 2), and provide all the regression table of the analysis presented in the paper both with and without controls (section 3). Finally, we include the meta-analysis and the plot (section 4). This pdf file is generated using the RMarkdown file "All_analysis.Rmd". All scripts used for the data processing and statistical analysis can be found following this Github link: <https://github.com/mariusmercier/paper_insight_culture>. Simply copy the github and run the Rmd file. A permanent archive is also available at the following OSF project: <https://osf.io/7qwt2/>.
+\newpage
+The Electronic Supplementary Material include more information on the Ethnographical Review (section 1), provide pre-registered analysis not presented in the paper for concision (section 2), and provide all the regression table of the analysis presented in the paper both with and without controls (section 3). We also include more information on exploratory analysis presented in the discussion (section 4). Materials not presented in the paper are available in section 5. This pdf file is generated using the RMarkdown file "All_analysis.Rmd". All scripts used for the data processing, the statistical analysis and for creating the figure can be found following this Github link: <https://github.com/mariusmercier/paper_insight_culture>. Simply copy the github and run the Rmd file. A permanent archive is also available at the following OSF project: <https://osf.io/7qwt2/>.
 
 # 1. Ethnographic Review
 
@@ -49,9 +56,13 @@ hraf_d[, 1:5] %>%
 
 # 2. Pre-registered analysis not presented
 
+As pre-registered, we conducted a within participants analysis at the level of the problem to test the following hypothesis.
+
+**H1.3**: Within each condition, participants will be more willing to share a problem for which they had a higher insight.
+
 ## Study 1
 
-```{r pre-processing S1}
+```{r S1 pre-processing}
 
 #Charge the dataset
 data_1 = read.csv("data/studies/exp_1.csv")
@@ -161,13 +172,13 @@ data_1$mean_RT = df_time$mean_RT
 # creation of the panel data for the LMM: 
 df_sharing$condition = data_1$condition
 
-pdata = merge(df_sharing, df_insight, by = "ResponseId")
+pdata_1 = merge(df_sharing, df_insight, by = "ResponseId")
 
-pdata = merge(pdata, df_ability, by = "ResponseId")
+pdata_1 = merge(pdata_1, df_ability, by = "ResponseId")
 
-pdata = merge(pdata, df_time, by = "ResponseId")
+pdata_1 = merge(pdata_1, df_time, by = "ResponseId")
 
-data_long = pdata %>%
+data_long1 = pdata_1 %>%
   pivot_longer(cols = c(ends_with("sharing"), ends_with("insight"), ends_with("solved"), ends_with("Page.Submit")),
                names_to = c("stumpers", ".value"),
                names_sep =  "_")
@@ -175,18 +186,18 @@ data_long = pdata %>%
 #Because we used pivot_longer with a between participants conditions, data points were created for the two conditions for each participants,
 #introducing 0's for the condition where the participant did not take part. We exclude these data points:
 
-data_long = data_long %>%
+data_long1 = data_long1 %>%
   filter(insight != 0)
 
 #Since ability also include the problem, we construct ability_others corresponding to the score of the participant on the two others problems.
 
-data_long = data_long %>%
+data_long1 = data_long1 %>%
   mutate(ability_other = ability - solved)
 
-data_High = data_long %>%
+data_High1 = data_long1 %>%
   filter(condition == 1)
 
-data_Low = data_long %>%
+data_Low1 = data_long1 %>%
   filter(condition == 0)
 
 #for the description of participants 
@@ -196,46 +207,1954 @@ demo_1 = demo_1 %>%
 
 demo_1$PROLIFIC_PID = demo_1$participant_id
 
-df1 = merge(x = data_1, y = demo_1, by = "PROLIFIC_PID", all.x = TRUE)
+data_1 = merge(x = data_1, y = demo_1, by = "PROLIFIC_PID", all.x = TRUE)
 ```
 
-As pre-registered, we conducted a within participants analysis at the level of the problem to test the following hypothesis.
-
-**H1.4:** Within each condition participants will be more willing to share a problem for which they had a higher insight.
-
-```{r, echo = TRUE}
-lmm1 = lmer(scale(sharing) ~ scale(insight) + factor(solved) + ability_other + log(time) + (1 + insight |ResponseId) + (1 |stumpers),
-            data = data_High, control = lmerControl(
+```{r S1 H1.3, echo = TRUE}
+S1_h13_1 = lmer(scale(sharing) ~ scale(insight) + factor(solved) + factor(ability_other) 
+                + log(time) + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_High1, control = lmerControl(
               optimizer ="bobyqa"
             ))
 
 
-lmm2 = lmer(scale(sharing) ~ scale(insight) + factor(solved) + ability_other + log(time) + (1 + insight |ResponseId) + (1 |stumpers),
-            data = data_Low, control = lmerControl(
+S1_h13_2 = lmer(scale(sharing) ~ scale(insight) + factor(solved) + factor(ability_other) 
+                + log(time) + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_Low1, control = lmerControl(
               optimizer ="bobyqa"
             ))
 ```
 
-```{r Regression table}
-
-export_summs(lmm1, lmm2, robust = c("HC1", "HC1"), 
-             model.names = c("Sharing Motivation, High Insight condition", "Sharing Motivation, Low Insight condition"), digits = 4,
-             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC"))
+```{r}
+export_summs(S1_h13_1, S1_h13_2, robust = c("HC1", "HC1"),
+             model.names = c("Will. to Share High Insight Condition", "Will. to Share Low Insight Condition"), digits = 4,
+             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC")) %>% set_caption("Study 1: Willingness to share as a function of Insight within each condition")
 ```
+
+\FloatBarrier
+
 ## Study 2
 
+```{r S2 pre-processing}
+data_2 = read.csv("data/studies/exp_2.csv", sep = ";")
+demo_2 = read.csv("data/studies/demographics_2.csv")
+
+data_2 = data_2 %>%
+  filter(Q4.2_understanding == "1" )
+
+data_2$implicit_motivation[data_2$implicit_motivation == "2"] = "0"
+data_2$actual_consumption = as.numeric(data_2$implicit_motivation)
+
+# create a variable for the mean insight
+
+df_insight = data_2 %>%
+  select(ends_with("insight") | ResponseId)
+
+df_insight[,1:6] = sapply(df_insight[,1:6],as.numeric)
+
+df_insight[is.na(df_insight)] = 0
+
+df_insight = df_insight %>%
+  group_by(ResponseId) %>%
+  mutate(insight_mean = (X1_insight + X2_insight + X3_insight + X4_insight + X5_insight + X6_insight) / 3)
+
+data_2$insight_mean = df_insight$insight_mean
+
+# create a variable for the mean sharing
+
+df_sharing = data_2 %>%
+  select(ends_with("sharing") | ResponseId)
+
+df_sharing[,1:6] = sapply(df_sharing[,1:6],as.numeric)
+
+df_sharing[is.na(df_sharing)] = 0
+
+df_sharing = df_sharing %>%
+  mutate(sharing_mean = (X1_sharing + X2_sharing + X3_sharing + X4_sharing
+     + X5_sharing + X6_sharing) / 3)
+
+data_2$sharing_mean = df_sharing$sharing_mean
+
+#creation of the ability variable
+
+df_ability = data_2 %>%
+  select(ends_with("solved") | ResponseId)
+
+df_ability[,1:6] = sapply(df_ability[,1:6],as.numeric)
+
+df_ability[is.na(df_ability)] = 0
+
+# only 1 correspond to the solved problem -> we assume that the persons did answer honestly
+# a random verification have been completed
+
+df_ability[df_ability == 2] = 0
+df_ability[df_ability == 3] = 0
+
+df_ability = df_ability %>%
+  group_by(ResponseId) %>%
+  mutate(ability = (X1_solved + X2_solved + X3_solved + X4_solved
+                    + X5_solved + X6_solved))
+
+data_2$ability = df_ability$ability
+
+
+#creation of the "not_understood" variable
+
+df_underst = data_2 %>%
+  select(ends_with("solved") | ResponseId)
+
+df_underst[,1:6] = sapply(df_underst[,1:6],as.numeric)
+
+df_underst[is.na(df_underst)] = 0
+
+# only 1 correspond to the solved problem -> we randomly verified that participants did not lie.
+
+df_underst[df_underst== 1] = 0
+df_underst[df_underst== 2] = 0
+df_underst[df_underst== 3] = 1
+
+df_underst = df_underst %>%
+  group_by(ResponseId) %>%
+  mutate(not_understood = (X1_solved + X2_solved + X3_solved + X4_solved
+                    + X5_solved + X6_solved))
+
+data_2$not_understood = df_underst$not_understood
+
+# creation of the time variable
+
+df_time = data_2 %>%
+  select(ends_with("Page.Submit") | ResponseId)
+
+df_time[,1:6] = sapply(df_time[,1:6],as.numeric)
+df_time[is.na(df_time)] = 0
+
+df_time = df_time %>%
+  mutate(mean_RT = rowSums(df_time[,1:6], na.rm = FALSE))
+
+df_time = df_time %>%
+  mutate(mean_RT = (mean_RT/3)) %>%
+  mutate(mean_RT = log(mean_RT))
+
+data_2$mean_RT = df_time$mean_RT
+
+# creation of the panel data_2 for the LMM: 
+df_sharing$condition = data_2$condition
+
+pdata_2 = merge(df_sharing, df_insight, by = "ResponseId")
+
+pdata_2 = merge(pdata_2, df_ability, by = "ResponseId")
+
+pdata_2 = merge(pdata_2, df_time, by = "ResponseId")
+
+data_long2 = pdata_2 %>%
+  pivot_longer(cols = c(ends_with("sharing"), ends_with("insight"), ends_with("solved"), ends_with("Page.Submit")),
+               names_to = c("stumpers", ".value"),
+               names_sep =  "_")
+
+data_long2 = data_long2 %>%
+  filter(insight != 0)
+
+data_long2 = data_long2 %>%
+  mutate(ability_other = ability - solved)
+
+data_High2 = data_long2 %>%
+  filter(condition == 1)
+
+data_Low2 = data_long2 %>%
+  filter(condition == 0)
+
+
+demographics = demo_2 %>%
+  filter(Sex != "CONSENT REVOKED")
+
+demographics$PROLIFIC_PID = demographics$participant_id
+
+data_2 = merge(x = data_2, y = demographics, by = "PROLIFIC_PID", all.x = TRUE)
+```
+
+```{r S2 H1.3, echo = TRUE}
+S2_h13_1 = lmer(scale(sharing) ~ scale(insight) 
+                + factor(solved) + factor(ability_other) + log(time) 
+                + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_High2, control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+
+S2_h13_2 = lmer(scale(sharing) ~ scale(insight) 
+                + factor(solved) + factor(ability_other) 
+                + log(time) + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_Low2, control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+```
+
+```{r, results='hold'}
+export_summs(S2_h13_1, S2_h13_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share High Insight Condition", "Will. to Share Low Insight Condition"), digits = 4,
+             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC")) %>% set_caption("Study 2: Willingness to share as a function of Insight, within each condition")
+
+```
+
+\FloatBarrier
+
 ## Study 3
+
+```{r pre-processing S3}
+data_3 = read.csv("data/studies/exp_3.csv")
+demo_3 = read.csv("data/studies/demographics_3.csv")
+
+data_3 = data_3 %>%
+  filter(Q4.2_understanding == "1" )
+
+data_3$implicit_motivation[data_3$implicit_motivation == "2"] = "0"
+data_3$actual_consumption = as.numeric(data_3$implicit_motivation)
+
+#there is one NA that correspond to a participant that continued the study: 
+#probably a bug:
+data_3$actual_consumption[is.na(data_3$actual_consumption)] = 1
+
+# create a variable for the mean insight
+
+df_insight = data_3 %>%
+  select(ends_with("insight") | ResponseId)
+
+df_insight[,1:6] = sapply(df_insight[,1:6],as.numeric)
+
+df_insight[is.na(df_insight)] = 0
+
+df_insight = df_insight %>%
+  group_by(ResponseId) %>%
+  mutate(insight_mean = (X1_insight + X2_insight + X3_insight + X4_insight + X5_insight + X6_insight) / 3)
+
+data_3$insight_mean = df_insight$insight_mean
+
+# create a variable for the mean sharing
+
+df_sharing = data_3 %>%
+  select(ends_with("sharing") | ResponseId)
+
+df_sharing[,1:6] = sapply(df_sharing[,1:6],as.numeric)
+
+df_sharing[is.na(df_sharing)] = 0
+
+df_sharing = df_sharing %>%
+  mutate(sharing_mean = (X1_sharing + X2_sharing + X3_sharing + X4_sharing
+     + X5_sharing + X6_sharing) / 3)
+
+data_3$sharing_mean = df_sharing$sharing_mean
+
+#creation of the ability variable
+
+df_ability = data_3 %>%
+  select(ends_with("solved") | ResponseId)
+
+df_ability[,1:6] = sapply(df_ability[,1:6],as.numeric)
+
+df_ability[is.na(df_ability)] = 0
+
+# only 1 correspond to the solved problem -> we assume that the persons did answer honestly
+# a random verification has been completed
+
+df_ability[df_ability == 2] = 0
+df_ability[df_ability == 3] = 0
+
+df_ability = df_ability %>%
+  group_by(ResponseId) %>%
+  mutate(ability = (X1_solved + X2_solved + X3_solved + X4_solved
+                    + X5_solved + X6_solved))
+
+data_3$ability = df_ability$ability
+
+#creation of the "not_understood" variable
+
+df_underst = data_3 %>%
+  select(ends_with("solved") | ResponseId)
+
+df_underst[,1:6] = sapply(df_underst[,1:6],as.numeric)
+
+df_underst[is.na(df_underst)] = 0
+
+# only 1 correspond to the solved problem -> we randomly verified that participants did not lie.
+
+df_underst[df_underst== 1] = 0
+df_underst[df_underst== 2] = 0
+df_underst[df_underst== 3] = 1
+
+df_underst = df_underst %>%
+  group_by(ResponseId) %>%
+  mutate(not_understood = (X1_solved + X2_solved + X3_solved + X4_solved
+                    + X5_solved + X6_solved))
+
+data_3$not_understood = df_underst$not_understood
+
+# creation of the time variable
+
+df_time = data_3 %>%
+  select(ends_with("Page.Submit") | ResponseId)
+
+df_time[,1:6] = sapply(df_time[,1:6],as.numeric)
+df_time[is.na(df_time)] = 0
+
+df_time = df_time %>%
+  mutate(mean_RT = rowSums(df_time[,1:6], na.rm = FALSE))
+
+df_time = df_time %>%
+  mutate(mean_RT = (mean_RT/3)) %>%
+  mutate(mean_RT = log(mean_RT))
+
+data_3$mean_RT = df_time$mean_RT
+
+# Creation of the Consume variable
+
+df_consume = data_3 %>%
+  select(ends_with("consume") | ResponseId)
+
+df_consume[,1:6] = sapply(df_consume[,1:6],as.numeric)
+
+df_consume[is.na(df_consume)] = 0
+
+df_consume = df_consume %>%
+  mutate(consume_mean = (X1_consume + X2_consume + X3_consume + X4_consume
+     + X5_consume + X6_consume) / 3)
+
+data_3$consume_mean = df_consume$consume_mean
+
+# creation of the panel data_3 for the LMM: 
+df_sharing$condition = data_3$condition
+
+pdata_3 = merge(df_sharing, df_insight, by = "ResponseId")
+
+pdata_3 = merge(pdata_3, df_ability, by = "ResponseId")
+
+pdata_3 = merge(pdata_3, df_time, by = "ResponseId")
+
+pdata_3 = merge(pdata_3, df_consume, by = "ResponseId")
+
+data_long3 = pdata_3 %>%
+  pivot_longer(cols = c(ends_with("sharing"), ends_with("insight"), ends_with("solved"), ends_with("consume"), ends_with("Page.Submit")),
+               names_to = c("stumpers", ".value"),
+               names_sep =  "_")
+
+data_long3 = data_long3 %>%
+  filter(insight != 0)
+
+data_long3 = data_long3 %>%
+  mutate(ability_other = ability - solved)
+
+data_High3 = data_long3 %>%
+  filter(condition == 1)
+
+data_Low3 = data_long3 %>%
+  filter(condition == 0)
+
+
+demographics = demo_3 %>%
+  filter(Sex != "CONSENT REVOKED")
+
+demographics$PROLIFIC_PID = demographics$Participant.id
+
+data_3 = merge(x = data_3, y = demographics, by = "PROLIFIC_PID", all.x = TRUE)
+```
+
+```{r S3 H1.3, echo = TRUE}
+S3_h13_1 = lmer(scale(sharing) ~ scale(insight) 
+                + factor(solved) + factor(ability_other) + log(time) 
+                + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_High3, control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+
+S3_h13_2 = lmer(scale(sharing) ~ scale(insight) 
+                + factor(solved) + factor(ability_other) + log(time) 
+                + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_Low3, control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+```
+
+```{r, results='hold'}
+export_summs(S3_h13_1, S3_h13_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share High Insight Condition", "Will. to Share Low Insight Condition"), digits = 4,
+             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC")) %>% set_caption("Study 3: Willingness to share as a function of insight, within each condition")
+```
+
+\FloatBarrier
+
+In study 3, we also measured the willingness to consume with a question after each problem. We pre-registered that: **H3.3**: Within each condition, participants will be more willing to consume a problem for which they had a higher insight.
+
+```{r S3 H3.3, echo = TRUE}
+S3_h33_1 = lmer(scale(consume) ~ scale(insight) 
+                + factor(solved) + factor(ability_other) + log(time) 
+                + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_High3, control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+
+S3_h33_2 = lmer(scale(consume) ~ scale(insight) 
+                + factor(solved) + factor(ability_other) + log(time) 
+                + (1 + insight |ResponseId) + (1 |stumpers),
+            data = data_Low3, control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+```
+
+```{r, results='hold'}
+export_summs(S3_h33_1, S3_h33_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Consume High Insight Condition", "Will. to Consume Low Insight Condition"), digits = 4,
+             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC")) %>% set_caption("Study 3: Willingness to Consume as a function of insight, within each condition")
+```
+
+\FloatBarrier
 
 # 3. Main Analysis
 
+We now turn to the regression tables of all hypothesis. The code to computationally replicate all analysis (including descriptive statistics) can be found in the Rmd file. Additional descriptive statistics can be found in the code such as the mean insight, sharing, RT for each problem.
+
+**H1: Willingness to share**
+
+H1.1: Participants in the High Insight Condition, compared to the Low Insight Condition, have a higher willingness to share problems.
+
+H1.2: Participants' mean insight positively predicts their mean willingness to share.
+
+**H2: Actual consumption**
+
+H2.1: Participants in the High Insight Condition, compared to the Low Insight Condition, are more likely to consume another problem.
+
+H2.2: Participants' mean insight positively predicts their odds of consuming another problem.
+
+**H3: Willingness to consume**
+
+H3.1: Participants in the High Insight Condition, compared to the Low Insight Condition, are more willing to consume other problems.
+
+H3.2: Participants' mean insight positively predicts their mean willingness to consume other problems.
+
 ## Study 1
+
+In the first study, we did not pre-register the control variable `not_understood`. We report here the result of our pre-registered analysis without this variable.
+
+```{r S1 Descriptive Statistics: Age/Sex, include = FALSE}
+table(data_1$Sex)
+summary(data_1$age)
+sd(data_1$age, na.rm = TRUE)
+```
+
+```{r S1 Descriptive Statistics: Time/ Insight/ Sharing/ Consumption, include = FALSE }
+# We remove outliers for the descriptive statistics of the time. 
+Q1 <- quantile(data_long1$time, .25)
+Q3 <- quantile(data_long1$time, .75)
+IQR <- IQR(data_long1$time)
+
+data_long1 %>%
+  group_by(condition) %>%
+  subset(data_long1$time > (Q1 - 1.5*IQR) & data_long1$time< (Q3 + 1.5*IQR)) %>%
+  summarise(
+    mean_RT = mean(time)
+  )
+
+
+data_1 %>%
+  group_by(condition) %>%
+  summarise(Insight = mean(insight_mean), 
+            SD_Insight = sd(insight_mean),
+         Sharing = mean(sharing_mean),
+         SD_Sharing = sd(sharing_mean),
+         Percent_Solved = mean(ability / 3),
+         Actual_consumption = mean(actual_consumption))
+  
+```
+
+```{r S1 Descriptive Statistics per Stumpers,include = FALSE}
+data_long1 %>%
+  group_by(stumpers)  %>%
+  summarise(insight_st = mean(insight), 
+         sharing_st = mean(sharing), 
+         difficutly_st = mean(solved))
+
+data_long1 %>%
+  group_by(stumpers) %>%
+    subset(data_long1$time > (Q1 - 1.5*IQR) & data_long1$time< (Q3 + 1.5*IQR)) %>%
+  summarise(mean_RT = mean(time))
+```
+
+```{r S1 More Descriptive Stats, include = FALSE}
+data_long1 %>%
+  group_by(solved, condition)  %>%
+  summarise(insight= mean(insight), 
+         sharing = mean(sharing))
+
+data_long1 %>%
+  group_by(solved, condition) %>%
+    subset(data_long1$time > (Q1 - 1.5*IQR) & data_long1$time< (Q3 + 1.5*IQR)) %>%
+  summarise(mean_RT = mean(time))
+  
+```
+
+```{r S1 Manipulation checks, include = FALSE}
+t.test(insight_mean ~ condition, data_1)
+
+cohen.d(insight_mean ~ condition, data_1, var.equal = FALSE)
+```
+
+### H1.1
+
+```{r S1 H1.1, echo = TRUE}
+S1_h11_1 = lm(scale(sharing_mean) ~ factor(condition), 
+              data_1)
+
+S1_h11_2 = lm(scale(sharing_mean) ~ factor(condition) 
+              + factor(ability) + scale(mean_RT),
+              data_1)
+
+S1_h11_3 = lm(scale(sharing_mean) ~ factor(condition) 
+              + factor(ability) + scale(mean_RT) + factor(not_understood), 
+              data_1)
+```
+
+```{r, include=FALSE}
+paper_MA = data.frame(study = "Study 1", hypothesis = "H1.1", estimate_scaled = coef(S1_h11_3)[2], std_error = summary(S1_h11_3)$coefficients[, "Std. Error"][2], condition = "Overall")
+```
+
+```{r}
+export_summs(S1_h11_1, S1_h11_2, S1_h11_3, robust = c("HC1", "HC1", "HC1"), 
+             model.names = c("Will. to Share", "Will. to share", "Will. to share"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Willingness to Share as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+### H1.2
+
+```{r S1 H1.2, echo = TRUE}
+S1_h12_1 = lm(scale(sharing_mean) ~ scale(insight_mean), 
+              data_1)
+
+S1_h12_2 = lm(scale(sharing_mean) ~ scale(insight_mean) 
+              + factor(ability) + scale(mean_RT),
+              data_1)
+
+S1_h12_3 = lm(scale(sharing_mean) ~ scale(insight_mean)
+              + factor(ability) + scale(mean_RT) + factor(not_understood),
+              data_1)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 1", hypothesis = "H1.2", estimate_scaled = coef(S1_h12_3)[2], std_error = summary(S1_h12_3)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S1_h12_1, S1_h12_2, S1_h12_3, robust = c("HC1", "HC1", "HC1"), 
+             model.names = c("Will. to Share", "Will. to share", "Will. to share"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Willingness to Share as a function of insight, with and without controls")
+```
+
+\FloatBarrier
+
+### H2.1
+
+```{r S1 H2.1, echo = TRUE}
+S1_h21_1 = glm(actual_consumption ~ factor(condition),
+               family = binomial(link = "probit"), data_1)
+
+S1_h21_2 = glm(actual_consumption ~ factor(condition)
+               + factor(ability) + scale(mean_RT),
+               family = binomial(link = "probit"), data_1)
+
+S1_h21_3 = glm(actual_consumption ~ factor(condition) 
+               + factor(ability) + scale(mean_RT) + factor(not_understood),
+               family = binomial(link = "probit"), data_1)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 1", hypothesis = "H2.1", estimate_scaled = coef(S1_h21_3)[2], std_error = summary(S1_h21_3)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S1_h21_1, S1_h21_2, S1_h21_3, robust = c("HC1", "HC1", "HC1"), 
+             model.names = c("Actual Consumption", "Actual Consumption", "Actual Consumption"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Actual Consumption as a function of condition, with and without controls")
+```
+
+```{r, include= FALSE}
+margins(S1_h21_3)
+```
+
+\FloatBarrier
+
+### H2.2
+
+```{r S1 H2.2, echo = TRUE}
+S1_h22_1 = glm(actual_consumption ~ scale(insight_mean),
+               family = binomial(link = "probit"), data_1)
+
+S1_h22_2 = glm(actual_consumption ~ scale(insight_mean)
+               + factor(ability) + scale(mean_RT),
+               family = binomial(link = "probit"), data_1)
+
+S1_h22_3 = glm(actual_consumption ~ scale(insight_mean)
+               + factor(ability) + scale(mean_RT) + factor(not_understood),
+               family = binomial(link = "probit"), data_1)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 1", hypothesis = "H2.2", estimate_scaled = coef(S1_h22_3)[2], std_error = summary(S1_h22_3)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S1_h22_1, S1_h22_2, S1_h22_3, robust = c("HC1", "HC1", "HC1"), 
+             model.names = c("Actual Consumption", "Actual Consumption", "Actual Consumption"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Actual Consumption as a function of insight, with and without controls")
+```
+
+\FloatBarrier
 
 ## Study 2
 
+```{r S2 Descriptive Statistics: Age/Sex, include = FALSE}
+table(data_2$Sex)
+summary(data_2$age)
+sd(data_2$age, na.rm = TRUE)
+```
+
+```{r S2 Descriptive Statistics: Time/ Insight/ Sharing/ Consumption, include = FALSE }
+# We remove outliers for the descriptive statistics of the time. 
+Q1 <- quantile(data_long2$time, .25)
+Q3 <- quantile(data_long2$time, .75)
+IQR <- IQR(data_long2$time)
+
+data_long2 %>%
+  group_by(condition) %>%
+  subset(data_long2$time > (Q1 - 1.5*IQR) & data_long2$time< (Q3 + 1.5*IQR)) %>%
+  summarise(
+    mean_RT = mean(time)
+  )
+
+
+data_2 %>%
+  group_by(condition) %>%
+  summarise(Insight = mean(insight_mean), 
+            SD_Insight = sd(insight_mean),
+         Sharing = mean(sharing_mean),
+         SD_Sharing = sd(sharing_mean),
+         Percent_Solved = mean(ability / 3),
+         Actual_consumption = mean(actual_consumption))
+  
+```
+
+```{r S2 Descriptive Statistics per Stumpers,include = FALSE}
+data_long2 %>%
+  group_by(stumpers)  %>%
+  summarise(insight_st = mean(insight), 
+         sharing_st = mean(sharing), 
+         difficutly_st = mean(solved))
+
+data_long2 %>%
+  group_by(stumpers) %>%
+    subset(data_long2$time > (Q1 - 1.5*IQR) & data_long2$time< (Q3 + 1.5*IQR)) %>%
+  summarise(mean_RT = mean(time))
+```
+
+```{r S2 More Descriptive Stats, include = FALSE}
+data_long2 %>%
+  group_by(solved, condition)  %>%
+  summarise(insight= mean(insight), 
+         sharing = mean(sharing))
+
+data_long2 %>%
+  group_by(solved, condition) %>%
+    subset(data_long2$time > (Q1 - 1.5*IQR) & data_long2$time< (Q3 + 1.5*IQR)) %>%
+  summarise(mean_RT = mean(time))
+  
+```
+
+```{r S2 Manipulation checks, include = FALSE}
+t.test(insight_mean ~ condition, data_2)
+
+cohen.d(insight_mean ~ condition, data_2, var.equal = FALSE)
+```
+
+### H1.1
+
+```{r S2 H1.1, echo = TRUE}
+S2_h11_1 = lm(scale(sharing_mean) ~ factor(condition),
+              data_2)
+
+S2_h11_2 = lm(scale(sharing_mean) ~ factor(condition)
+              + factor(ability) + scale(mean_RT) + factor(not_understood),
+              data_2)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 2", hypothesis = "H1.1", estimate_scaled = coef(S2_h11_2)[2], std_error = summary(S2_h11_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S2_h11_1, S2_h11_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share", "Will. to share"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Willingness to share as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+### H1.2
+
+```{r S2 H1.2, echo = TRUE}
+S2_h12_1 = lm(scale(sharing_mean) ~ scale(insight_mean),
+              data_2)
+
+S2_h12_2 = lm(scale(sharing_mean) ~ scale(insight_mean)
+              + factor(ability) + scale(mean_RT) + factor(not_understood),
+              data_2)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 2", hypothesis = "H1.2", estimate_scaled = coef(S2_h12_2)[2], std_error = summary(S2_h12_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S2_h12_1, S2_h12_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share", "Will. to share"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Willingness to share as a function of insight, with and without controls")
+```
+
+\FloatBarrier
+
+### H2.1
+
+```{r S2 H2.1, echo = TRUE}
+S2_h21_1 = glm(actual_consumption ~ factor(condition),
+               family = binomial(link = "probit"), data_2)
+
+S2_h21_2 = glm(actual_consumption ~ factor(condition)
+               + factor(ability) + scale(mean_RT) + factor(not_understood),
+               family = binomial(link = "probit"), data_2)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 2", hypothesis = "H2.1", estimate_scaled = coef(S2_h21_2)[2], std_error = summary(S2_h21_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S2_h21_1, S2_h21_2, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Actual consumption as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+```{r, include = FALSE}
+margins(S2_h21_2)
+```
+
+### H2.2
+
+```{r S2 H2.2, echo = TRUE}
+S2_h22_1 = glm(actual_consumption ~ scale(insight_mean),
+               family = binomial(link = "probit"), data_2)
+
+S2_h22_2 = glm(actual_consumption ~ scale(insight_mean)
+               + factor(ability) + scale(mean_RT) + factor(not_understood),
+               family = binomial(link = "probit"), data_2)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 2", hypothesis = "H2.2", estimate_scaled = coef(S2_h22_2)[2], std_error = summary(S2_h22_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S2_h22_1, S2_h22_2, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Actual consumption as a function of insight, with and without controls")
+```
+
+\FloatBarrier
+
 ## Study 3
+
+```{r S3 Descriptive Statistics: Age/Sex, include = FALSE}
+table(data_3$Sex)
+summary(as.numeric(data_3$Age))
+sd(data_3$Age, na.rm = TRUE)
+```
+
+```{r S3 Descriptive Statistics: Time/ Insight/ Sharing/ Consumption, include = FALSE }
+# We remove outliers for the descriptive statistics of the time. 
+Q1 <- quantile(data_long3$time, .25)
+Q3 <- quantile(data_long3$time, .75)
+IQR <- IQR(data_long3$time)
+
+data_long3 %>%
+  group_by(condition) %>%
+  subset(data_long3$time > (Q1 - 1.5*IQR) & data_long3$time< (Q3 + 1.5*IQR)) %>%
+  summarise(
+    mean_RT = mean(time)
+  )
+
+
+data_3 %>%
+  group_by(condition) %>%
+  summarise(Insight = mean(insight_mean), 
+            SD_Insight = sd(insight_mean),
+         Sharing = mean(sharing_mean),
+         SD_Sharing = sd(sharing_mean),
+         Percent_Solved = mean(ability / 3),
+         Actual_consumption = mean(actual_consumption))
+  
+```
+
+```{r S3 Descriptive Statistics per Stumpers,include = FALSE}
+data_long3 %>%
+  group_by(stumpers)  %>%
+  summarise(insight_st = mean(insight), 
+         sharing_st = mean(sharing), 
+         difficutly_st = mean(solved))
+
+data_long3 %>%
+  group_by(stumpers) %>%
+    subset(data_long3$time > (Q1 - 1.5*IQR) & data_long3$time< (Q3 + 1.5*IQR)) %>%
+  summarise(mean_RT = mean(time))
+```
+
+```{r S3 More Descriptive Stats, include = FALSE}
+data_long3 %>%
+  group_by(solved, condition)  %>%
+  summarise(insight= mean(insight), 
+         sharing = mean(sharing))
+
+data_long3 %>%
+  group_by(solved, condition) %>%
+    subset(data_long3$time > (Q1 - 1.5*IQR) & data_long3$time< (Q3 + 1.5*IQR)) %>%
+  summarise(mean_RT = mean(time))
+  
+```
+
+```{r S3 Manipulation checks, include = FALSE}
+t.test(insight_mean ~ condition, data_3)
+
+cohen.d(insight_mean ~ condition, data_3, var.equal = FALSE)
+```
+
+### H1.1
+
+```{r S3 H1.1, echo = TRUE}
+S3_h11_1 = lm(scale(sharing_mean) ~ factor(condition),
+              data_3)
+
+S3_h11_2 = lm(scale(sharing_mean) ~ factor(condition)
+              + factor(ability) + scale(mean_RT) + factor(not_understood),
+              data_3)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H1.1", estimate_scaled = coef(S3_h11_2)[2], std_error = summary(S3_h11_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S3_h11_1, S3_h11_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share", "Will. to share"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Willingness to share as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+### H1.2
+
+```{r S3 H1.2, echo = TRUE}
+S3_h12_1 = lm(scale(sharing_mean) ~ scale(insight_mean),
+              data_3)
+
+S3_h12_2 = lm(scale(sharing_mean) ~ scale(insight_mean)
+              + factor(ability) + scale(mean_RT) + factor(not_understood),
+              data_3)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H1.2", estimate_scaled = coef(S3_h12_2)[2], std_error = summary(S3_h12_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S3_h12_1, S3_h12_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share", "Will. to share"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Willingness to share as a function of insight, with and without controls")
+```
+
+\FloatBarrier
+
+### H2.1
+
+```{r S3 H2.1, echo = TRUE}
+S3_h21_1 = glm(actual_consumption ~ factor(condition),
+               family = binomial(link = "probit"), data_3)
+
+S3_h21_2 = glm(actual_consumption ~ factor(condition)
+               + factor(ability) + scale(mean_RT) + factor(not_understood),
+               family = binomial(link = "probit"), data_3)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H2.1", estimate_scaled = coef(S3_h21_2)[2], std_error = summary(S3_h21_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S3_h21_1, S3_h21_2, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Actual consumption as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+### H2.2
+
+```{r S3 H2.2, echo = TRUE}
+S3_h22_1 = glm(actual_consumption ~ scale(insight_mean),
+               family = binomial(link = "probit"), data_3)
+
+S3_h22_2 = glm(actual_consumption ~ scale(insight_mean)
+               + factor(ability) + scale(mean_RT) + factor(not_understood),
+               family = binomial(link = "probit"), data_3)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H2.2", estimate_scaled = coef(S3_h22_2)[2], std_error = summary(S3_h22_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S3_h22_1, S3_h22_2, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Actual consumption as a function of insight, with and without controls")
+```
+
+\FloatBarrier
+
+### H3.1
+
+```{r S3 H3.1, echo = TRUE}
+S3_h31_1 = lm(scale(consume_mean) ~ factor(condition),
+              data_3)
+
+S3_h31_2 = lm(scale(consume_mean) ~ factor(condition)
+              + factor(ability) + scale(mean_RT) + factor(not_understood),
+              data_3)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H3.1", estimate_scaled = coef(S3_h31_2)[2], std_error = summary(S3_h31_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S3_h31_1, S3_h31_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Consume", "Will. to Consume"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Willingness to consume as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+### H3.2
+
+```{r S3 H3.2, echo = TRUE}
+S3_h32_1 = lm(scale(consume_mean) ~ scale(insight_mean),
+              data_3)
+
+S3_h32_2 = lm(scale(consume_mean) ~ scale(insight_mean)
+              + factor(ability) + scale(mean_RT) + factor(not_understood),
+              data_3)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H3.2", estimate_scaled = coef(S3_h32_2)[2], std_error = summary(S3_h32_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S3_h32_1, S3_h32_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Consume", "Will. to Consume"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Willingness to consume as a function of insight, with and without controls")
+```
+
+\FloatBarrier
 
 ## Study 4
 
+```{r preprocessing S4, include = FALSE}
+data_4 = read.csv("data/studies/exp_4.csv")
+demo_4 = read.csv("data/studies/demographics_4.csv")
+
+data_4 = data_4 %>% 
+  filter(understanding == "1")
+
+data_4$implicit_motivation[data_4$implicit_motivation == "2"] = "0"
+
+data_4$actual_consumption = as.numeric(data_4$implicit_motivation)
+
+# create a variable for the insight (not mean -> there is only 1 trial per person)
+
+df_insight = data_4 %>%
+  select(contains("insight") | ResponseId)
+
+df_insight[,1:6] = sapply(df_insight[,1:6],as.numeric)
+
+df_insight[is.na(df_insight)] = 0
+
+df_insight$insight = rowSums(df_insight[,1:6])
+
+data_4$insight = df_insight$insight
+
+# create a variable for the sharing
+
+df_sharing = data_4 %>%
+  select(contains("sharing") | ResponseId)
+
+df_sharing[,1:6] = sapply(df_sharing[,1:6],as.numeric)
+
+df_sharing[is.na(df_sharing)] = 0
+
+df_sharing$sharing = rowSums(df_sharing[,1:6])
+
+data_4$sharing = df_sharing$sharing
+
+
+#creation of the convincingness variable
+
+df_convince = data_4 %>%
+  select(contains("convince") | ResponseId)
+
+df_convince[,1:6] = sapply(df_convince[,1:6],as.numeric)
+
+df_convince[is.na(df_convince)] = 0
+
+df_convince$convince = rowSums(df_convince[,1:6])
+
+data_4$convince = df_convince$convince
+
+# creation of the time variable
+
+df_time = data_4 %>%
+  select(contains("Page.Submit") & contains("X")| ResponseId)
+
+df_time[,1:6] = sapply(df_time[,1:6],as.numeric)
+df_time[is.na(df_time)] = 0
+
+df_time = df_time %>%
+  mutate(RT = rowSums(df_time[,1:6], na.rm = FALSE))
+
+df_time = df_time %>%
+  mutate(RT = log(RT))
+
+data_4$RT = df_time$RT
+
+## create a categorical variable for the stim
+df_insight = df_insight %>%
+  mutate(story = ifelse(X1_insight_1 != 0, "chocolate", 0)) %>%
+  mutate(story = ifelse(X2_insight_1 != 0, "nightmare", story)) %>%
+  mutate(story = ifelse(X10_insight_1 != 0, "cocktail", story)) %>%
+  mutate(story = ifelse(X1_insight_0 != 0, "chocolate", story)) %>%
+  mutate(story = ifelse(X2_insight_0 != 0, "nightmare", story)) %>%
+  mutate(story = ifelse(X10_insight_0 != 0, "cocktail", story))
+  
+data_4$story = df_insight$story
+
+## 
+data_High4 = data_4 %>%
+  filter(condition == 1)
+
+data_Low4 = data_4 %>%
+  filter(condition == 0)
+
+##
+demo_4 = demo_4 %>%
+  filter(Sex != "CONSENT_REVOKED")
+
+demo_4$PROLIFIC_PID = demo_4$Participant.id
+
+data_4 = merge(x = data_4, y = demo_4, by = "PROLIFIC_PID", all.x = TRUE)
+```
+
+```{r S4 Descriptive Stats, include=FALSE}
+data_4 %>%
+  group_by(condition) %>%
+  summarise(Insight = mean(insight), 
+         Sharing = mean(sharing),
+         Convince = mean(convince),
+         Consume = mean(actual_consumption))
+
+data_4 %>%
+  group_by(condition, story) %>%
+  summarise(Insight = mean(insight), 
+         Sharing = mean(sharing),
+         Convince = mean(convince),
+         Consume = mean(actual_consumption))
+
+summary(as.numeric(data_4$Age))
+sd(as.numeric(data_4$Age), na.rm = TRUE)
+table(data_4$Sex)
+```
+
+```{r S4 Manipulation Checks, include=FALSE}
+t.test(insight ~ condition, data_4)
+cohen.d(insight ~ condition, data_4, var.equal = FALSE)
+```
+
+### H1.1
+
+```{r S4 H1.1, echo = TRUE}
+S4_h11_1 = lm(scale(sharing) ~ factor(condition),
+              data_4)
+
+S4_h11_2 = lm(scale(sharing) ~ factor(condition)
+              + scale(RT) + scale(convince),
+              data_4)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 4", hypothesis = "H1.1", estimate_scaled = coef(S4_h11_2)[2], std_error = summary(S4_h11_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S4_h11_1, S4_h11_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share", "Will. to share"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Willingness to share as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+### H1.2
+
+```{r S4 H1.2 High Insight, echo = TRUE}
+S4_h12_1 = lmer(scale(sharing) ~ scale(insight)
+              + (1|story),
+              data_High4)
+
+S4_h12_2 = lmer(scale(sharing) ~ scale(insight)
+              + scale(RT) + scale(convince)
+              + (1|story),
+              data_High4)
+```
+
+```{r}
+export_summs(S4_h12_1, S4_h12_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share (HI Condition)", "Will. to share (HI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Willingness to share as a function of insight, with and without controls, within the High Insight Condition")
+```
+
+\FloatBarrier
+
+```{r S4 H1.2 Low Insight, echo = TRUE}
+S4_h12_3 = lmer(scale(sharing) ~ scale(insight)
+              + (1|story),
+              data_Low4)
+
+S4_h12_4 = lmer(scale(sharing) ~ scale(insight)
+              + scale(RT) + scale(convince)
+              + (1|story),
+              data_Low4)
+```
+
+```{r}
+export_summs(S4_h12_3, S4_h12_4, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share (LI Condition)", "Will. to share (LI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Willingness to share as a function of insight, with and without controls, within the Low Insight Condition")
+```
+
+\FloatBarrier
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 4", hypothesis = "H1.2", estimate_scaled = fixef(S4_h12_2)[2], std_error = summary(S4_h12_2)$coefficients[, "Std. Error"][2], condition = "High Insight"))
+
+paper_MA = rbind(paper_MA, data.frame(study = "Study 4", hypothesis = "H1.2", estimate_scaled = fixef(S4_h12_4)[2], std_error = summary(S4_h12_4)$coefficients[, "Std. Error"][2], condition = "Low Insight"))
+```
+
+### H2.1
+
+```{r S4 H2.1, echo = TRUE}
+S4_h21_1 = glm(actual_consumption ~ factor(condition),
+               family = binomial(link = "probit"), data_4)
+
+S4_h21_2 = glm(actual_consumption ~ factor(condition)
+               + scale(RT) + scale(convince),
+               family = binomial(link = "probit"), data_4)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 4", hypothesis = "H2.1", estimate_scaled = coef(S4_h21_2)[2], std_error = summary(S4_h21_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S4_h21_1, S4_h21_2, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Actual consumption as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+### H2.2
+
+```{r S4 H2.2 High Insight, echo = TRUE}
+S4_h22_1 = glmer(actual_consumption ~ scale(insight)
+                 + (1|story),
+                 family = binomial(link = "probit"), data_High4)
+
+S4_h22_2 = glmer(actual_consumption ~ scale(insight)
+               + scale(RT) + scale(convince)
+               + (1|story),
+               family = binomial(link = "probit"), data_High4)
+```
+
+```{r}
+export_summs(S4_h22_1, S4_h22_2, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption (HI Condition)", "Actual Consumption (HI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Actual consumption as a function of insight, with and without controls, within the High Insight Condition")
+```
+
+```{r S4 H2.2 Low Insight, echo = TRUE}
+S4_h22_3 = glmer(actual_consumption ~ scale(insight)
+                 + (1|story),
+                 family = binomial(link = "probit"), data_Low4)
+
+S4_h22_4 = glmer(actual_consumption ~ scale(insight)
+               + scale(RT) + scale(convince)
+               + (1|story),
+               family = binomial(link = "probit"), data_Low4)
+```
+
+```{r}
+export_summs(S4_h22_3, S4_h22_4, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption (LI Condition)", "Actual Consumption (LI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Actual consumption as a function of insight, with and without controls, within the Low Insight Condition")
+```
+
+\FloatBarrier
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 4", hypothesis = "H2.2", estimate_scaled = fixef(S4_h22_2)[2], std_error = summary(S4_h22_2)$coefficients[, "Std. Error"][2], condition = "High Insight"))
+
+paper_MA = rbind(paper_MA, data.frame(study = "Study 4", hypothesis = "H2.2", estimate_scaled = fixef(S4_h22_4)[2], std_error = summary(S4_h22_4)$coefficients[, "Std. Error"][2], condition = "Low Insight"))
+```
+
 ## Study 5
 
-# 4. Meta-Analysis
+```{r S5 pre-processing, include=FALSE}
+data_5 = read.csv("data/studies/exp_5.csv")
+demo_5 = read.csv("data/studies/demographics_5.csv")
+
+
+data_5 = data_5 %>% 
+  filter(understanding == "1")
+
+data_5$implicit_motivation[data_5$implicit_motivation == "2"] = "0"
+
+data_5$actual_consumption = as.numeric(data_5$implicit_motivation)
+
+# create a variable for the insight (not mean -> there is only 1 trial per person)
+
+df_insight = data_5 %>%
+  select(contains("insight") | ResponseId)
+
+df_insight[,1:6] = sapply(df_insight[,1:6],as.numeric)
+
+df_insight[is.na(df_insight)] = 0
+
+df_insight$insight = rowSums(df_insight[,1:6])
+
+data_5$insight = df_insight$insight
+
+# create a variable for the sharing
+
+df_sharing = data_5 %>%
+  select(contains("sharing") | ResponseId)
+
+df_sharing[,1:6] = sapply(df_sharing[,1:6],as.numeric)
+
+df_sharing[is.na(df_sharing)] = 0
+
+df_sharing$sharing = rowSums(df_sharing[,1:6])
+
+data_5$sharing = df_sharing$sharing
+
+
+#creation of the convincingness variable
+
+df_convince = data_5 %>%
+  select(contains("convince") | ResponseId)
+
+df_convince[,1:6] = sapply(df_convince[,1:6],as.numeric)
+
+df_convince[is.na(df_convince)] = 0
+
+df_convince$convince = rowSums(df_convince[,1:6])
+
+data_5$convince = df_convince$convince
+
+# creation of the willingness to consume variable: 
+
+df_consume_report = data_5 %>%
+  select(contains("consume_report") | ResponseId)
+
+df_consume_report[,1:6] = sapply(df_consume_report[,1:6],as.numeric)
+
+df_consume_report[is.na(df_consume_report)] = 0
+
+df_consume_report$consume_report = rowSums(df_consume_report[,1:6])
+
+data_5$consume = df_consume_report$consume_report
+
+# creation of the time variable
+
+df_time = data_5 %>%
+  select(contains("Page.Submit") & contains("X")| ResponseId)
+
+df_time[,1:6] = sapply(df_time[,1:6],as.numeric)
+df_time[is.na(df_time)] = 0
+
+df_time = df_time %>%
+  mutate(RT = rowSums(df_time[,1:6], na.rm = FALSE))
+
+df_time = df_time %>%
+  mutate(RT = log(RT))
+
+data_5$RT = df_time$RT
+
+## create a categorical variable for the stim
+df_insight = df_insight %>%
+  mutate(story = ifelse(X1_insight_1 != 0, "chocolate", 0)) %>%
+  mutate(story = ifelse(X2_insight_1 != 0, "nightmare", story)) %>%
+  mutate(story = ifelse(X10_insight_1 != 0, "cocktail", story)) %>%
+  mutate(story = ifelse(X1_insight_0 != 0, "chocolate", story)) %>%
+  mutate(story = ifelse(X2_insight_0 != 0, "nightmare", story)) %>%
+  mutate(story = ifelse(X10_insight_0 != 0, "cocktail", story))
+  
+data_5$story = df_insight$story
+
+## 
+data_High5 = data_5 %>%
+  filter(condition == 1)
+
+data_Low5 = data_5 %>%
+  filter(condition == 0)
+
+##
+demo_5 = demo_5 %>%
+  filter(Sex != "CONSENT_REVOKED")
+
+demo_5$PROLIFIC_PID = demo_5$Participant.id
+
+data_5 = merge(x = data_5, y = demo_5, by = "PROLIFIC_PID", all.x = TRUE)
+```
+
+```{r S5 Descriptive Stats, include=FALSE}
+data_5 %>%
+  group_by(condition) %>%
+  summarise(Insight = mean(insight), 
+         Sharing = mean(sharing),
+         Convince = mean(convince),
+         Consume = mean(actual_consumption))
+
+data_5 %>%
+  group_by(condition, story) %>%
+  summarise(Insight = mean(insight), 
+         Sharing = mean(sharing),
+         Convince = mean(convince),
+         Consume = mean(actual_consumption))
+
+summary(as.numeric(data_5$Age))
+sd(as.numeric(data_5$Age), na.rm = TRUE)
+table(data_5$Sex)
+```
+
+```{r S5 Manipulation Checks, include=FALSE}
+t.test(insight ~ condition, data_5)
+cohen.d(insight ~ condition, data_5, var.equal = FALSE)
+```
+
+### H1.1
+
+```{r S5 H1.1, echo = TRUE}
+S5_h11_1 = lm(scale(sharing) ~ factor(condition),
+              data_5)
+
+S5_h11_2 = lm(scale(sharing) ~ factor(condition)
+              + scale(RT) + scale(convince),
+              data_5)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H1.1", estimate_scaled = coef(S5_h11_2)[2], std_error = summary(S5_h11_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S5_h11_1, S5_h11_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share", "Will. to share"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to share as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+### H1.2
+
+```{r S5 H1.2 High Insight, echo = TRUE}
+S5_h12_1 = lmer(scale(sharing) ~ scale(insight)
+              + (1|story),
+              data_High5)
+
+S5_h12_2 = lmer(scale(sharing) ~ scale(insight)
+              + scale(RT) + scale(convince)
+              + (1|story),
+              data_High5)
+```
+
+```{r}
+export_summs(S5_h12_1, S5_h12_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share (HI Condition)", "Will. to share (HI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to share as a function of insight, with and without controls, within the High Insight Condition")
+```
+
+\FloatBarrier
+
+```{r S5 H1.2 Low Insight, echo = TRUE}
+S5_h12_3 = lmer(scale(sharing) ~ scale(insight)
+              + (1|story),
+              data_Low5)
+
+S5_h12_4 = lmer(scale(sharing) ~ scale(insight)
+              + scale(RT) + scale(convince)
+              + (1|story),
+              data_Low5)
+```
+
+```{r}
+export_summs(S5_h12_3, S5_h12_4, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Share (LI Condition)", "Will. to share (LI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to share as a function of insight, with and without controls, within the Low Insight Condition")
+```
+
+\FloatBarrier
+
+```{r, include = FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H1.2", estimate_scaled = fixef(S5_h12_2)[2], std_error = summary(S5_h12_2)$coefficients[, "Std. Error"][2], condition = "High Insight"))
+
+paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H1.2", estimate_scaled = fixef(S5_h12_4)[2], std_error = summary(S5_h12_4)$coefficients[, "Std. Error"][2], condition = "Low Insight"))
+```
+
+### H2.1
+
+```{r S5 H2.1, echo = TRUE}
+S5_h21_1 = glm(actual_consumption ~ factor(condition),
+               family = binomial(link = "probit"), data_5)
+
+S5_h21_2 = glm(actual_consumption ~ factor(condition)
+               + scale(RT) + scale(convince),
+               family = binomial(link = "probit"), data_5)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H2.1", estimate_scaled = coef(S5_h21_2)[2], std_error = summary(S5_h21_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S5_h21_1, S5_h21_2, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Actual consumption as a function of condition, with and without controls")
+```
+
+\FloatBarrier
+
+### H2.2
+
+```{r S5 H2.2 High Condition, echo = TRUE}
+S5_h22_1 = glmer(actual_consumption ~ scale(insight)
+               + (1|story),
+               family = binomial(link = "probit"), data_High5)
+
+S5_h22_2 = glmer(actual_consumption ~ scale(insight)
+               + scale(RT) + scale(convince)
+               + (1|story),
+               family = binomial(link = "probit"), data_High5)
+```
+
+```{r}
+export_summs(S5_h22_1, S5_h22_2, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption (HI Condition)", "Actual Consumption (HI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Actual consumption as a function of insight, with and without controls, within the High Insight Condition")
+```
+
+\FloatBarrier
+
+```{r S5 H2.2 Low Condition, echo = TRUE}
+S5_h22_3 = glmer(actual_consumption ~ scale(insight)
+               + (1|story),
+               family = binomial(link = "probit"), data_Low5)
+
+S5_h22_4 = glmer(actual_consumption ~ scale(insight)
+               + scale(RT) + scale(convince)
+               + (1|story),
+               family = binomial(link = "probit"), data_Low5)
+```
+
+```{r}
+export_summs(S5_h22_3, S5_h22_4, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption (LI Condition)", "Actual Consumption (LI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Actual consumption as a function of insight, with and without controls, within the Low Insight Condition")
+
+```
+
+\FloatBarrier
+
+```{r, include = FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H2.2", estimate_scaled = fixef(S5_h22_2)[2], std_error = summary(S5_h22_2)$coefficients[, "Std. Error"][2], condition = "High Insight"))
+
+paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H2.2", estimate_scaled = fixef(S5_h22_4)[2], std_error = summary(S5_h22_4)$coefficients[, "Std. Error"][2], condition = "Low Insight"))
+```
+
+### H3.1
+
+```{r S5 H3.1, echo=TRUE}
+S5_h31_1 = lm(scale(consume) ~ factor(condition),
+              data_5)
+S5_h31_2 = lm(scale(consume) ~ factor(condition)
+              + scale(RT) + scale(convince) + scale(as.numeric(pre_test)),
+              data_5)
+```
+
+```{r, include=FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H3.1", estimate_scaled = coef(S5_h31_2)[2], std_error = summary(S5_h31_2)$coefficients[, "Std. Error"][2], condition = "Overall"))
+```
+
+```{r}
+export_summs(S5_h31_1, S5_h31_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Consume", "Will. to Consume"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to consume as a function of condition, with and without controls")
+```
+
+\FloatBarrier 
+
+### H3.2
+
+```{r S5 H3.2 High Insight, echo=TRUE}
+S5_h32_1 = lmer(scale(consume) ~ scale(insight)
+              + (1|story),
+              data_High5)
+S5_h32_2 = lmer(scale(consume) ~ scale(insight)
+              + scale(RT) + scale(convince) + scale(as.numeric(pre_test))
+              + (1|story),
+              data_High5)
+```
+
+```{r}
+export_summs(S5_h32_1, S5_h32_2, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Consume (HI Condition)", "Will. to Consume (HI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to consume as a function of insight, with and without controls, within the High Insight Condition")
+```
+
+\FloatBarrier
+
+```{r S5 H3.2 Low Insight, echo=TRUE}
+S5_h32_3 = lmer(scale(consume) ~ scale(insight)
+              + (1|story),
+              data_Low5)
+S5_h32_4 = lmer(scale(consume) ~ scale(insight)
+              + scale(RT) + scale(convince) + scale(as.numeric(pre_test))
+              + (1|story),
+              data_Low5)
+```
+
+```{r}
+export_summs(S5_h32_3, S5_h32_4, robust = c("HC1", "HC1"), 
+             model.names = c("Will. to Consume (LI Condition)", "Will. to Consume (LI Condition)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to consume as a function of insight, with and without controls, within the Low Insight Condition")
+```
+
+\FloatBarrier
+
+```{r, include = FALSE}
+paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H3.2", estimate_scaled = fixef(S5_h32_2)[2], std_error = summary(S5_h32_2)$coefficients[, "Std. Error"][2], condition = "High Insight"))
+
+paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H3.2", estimate_scaled = fixef(S5_h32_4)[2], std_error = summary(S5_h32_4)$coefficients[, "Std. Error"][2], condition = "Low Insight"))
+```
+
+```{r, include = FALSE}
+# This part perform the meta-analysis and creates the forest plot
+
+paper_MA <- paper_MA %>%
+  arrange(hypothesis, desc(study)) %>%
+  mutate(study = factor(study, levels = unique(study))) %>% 
+  mutate(Offset = ifelse(condition == "High Insight", 0.2, ifelse(condition == "Low Insight", -0.2, 0)))
+
+paper_MA$LowerCI <- paper_MA$estimate_scaled - 1.96 * paper_MA$std_error
+paper_MA$UpperCI <- paper_MA$estimate_scaled + 1.96 * paper_MA$std_error
+
+paper_MA = paper_MA%>% 
+  mutate(Significance = ifelse(LowerCI > 0 | UpperCI < 0, "Significant", "Non-significant"))
+
+
+# Get a list of unique hypotheses
+unique_hypotheses <- unique(paper_MA$hypothesis)
+
+# Create an empty list to store the data frames for each hypothesis group
+meta_analysis_list <- list()
+
+# Loop over each unique hypothesis
+for (i in seq_along(unique_hypotheses)) {
+  
+  # Get the data for the current hypothesis
+  current_data <- paper_MA%>% filter(hypothesis == unique_hypotheses[i])
+  
+  # Perform the meta-analysis using the rma.uni function
+  res <- rma.uni(yi = current_data$estimate_scaled, sei = current_data$std_error, method = "REML")
+  
+  # Create a data frame with the results and the hypothesis value
+  meta_analysis_df <- data.frame(
+    study = "RE Model",
+    hypothesis = unique_hypotheses[i],  
+    condition = "Overall",
+    estimate_scaled= res$b,
+    std_error = res$se,
+    LowerCI = res$ci.lb,
+    UpperCI = res$ci.ub,
+    Offset = 0,
+    Significance = ifelse(res$ci.lb > 0 | res$ci.ub < 0, "Significant", "Non-significant")
+  )
+  
+  # Add the data frame to the list
+  meta_analysis_list[[i]] <- meta_analysis_df
+}
+
+# Combine all the data frames in the list into a single data frame
+meta_analysis <- bind_rows(meta_analysis_list)
+
+combined_data <- bind_rows(paper_MA, meta_analysis)
+
+# Ensure "RE Model" is the last level in the study factor
+combined_data$study <- factor(combined_data$study, levels = c(setdiff(unique(combined_data$study), "RE Model"), "RE Model"))
+
+
+combined_data$study <- combined_data$study %>%
+  fct_relevel("RE Model", after = 0)
+
+combined_data$high_level_hypothesis <- ifelse(grepl("H1", combined_data$hypothesis), "Willingness to Share",
+                                              ifelse(grepl("H2", combined_data$hypothesis), "Actual Consumption",
+                                                     ifelse(grepl("H3", combined_data$hypothesis),
+                                                            "Willingness to Consume", NA)))
+                                              
+combined_data$high_level_hypothesis <- factor(combined_data$high_level_hypothesis, levels = c("Willingness to Share", "Actual Consumption", "Willingness to Consume"))
+
+
+ggplot(data = combined_data, aes(x = estimate_scaled, y = study)) +
+  geom_point(aes(y = as.numeric(study) + Offset, shape = condition, color = Significance), size = 2) +
+  geom_errorbarh(aes(y = as.numeric(study) + Offset, xmax = UpperCI, xmin = LowerCI), height = 0.2) +
+  geom_text(aes(y = as.numeric(study) + Offset, label = sprintf("%.2f", estimate_scaled)), vjust = -0.5, color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "red") +
+  labs(x = "Effect size", y = "Study") +
+  facet_nested(~ high_level_hypothesis + hypothesis, scales = "free", space = "fixed") +
+  theme(strip.background=element_rect(color="grey30", fill="grey90")) +
+  theme(legend.title = element_blank(), legend.position = "bottom") +
+  scale_shape_manual(values = c("High Insight" = 16, "Low Insight" = 17, "Overall" = 15)) +
+  scale_y_continuous(breaks = seq(1, length(unique(combined_data$study))), labels = levels(combined_data$study)) +
+  scale_color_manual(values = c("Significant" = "green", "Non-significant" = "red")) +
+  theme_bw()
+
+# ggsave("meta_plot.pdf", height = 6, width = 10) 
+```
+
+```{r, include = FALSE}
+# Create a table displaying the results of the meta-analysis for each hypothesis
+
+# initiate the table
+meta_analysis_table = data.frame()
+
+
+for (i in seq_along(unique_hypotheses)) {
+  
+  # Get the data for the current hypothesis
+  current_data <- paper_MA%>% filter(hypothesis == unique_hypotheses[i])
+  
+  # Perform the meta-analysis using the rma.uni function
+  res <- rma.uni(yi = current_data$estimate_scaled, sei = current_data$std_error, method = "REML")
+  
+  # Create a row
+  row = data.frame(
+    hypothesis = unique_hypotheses[i],  
+    estimate = res$b,
+    std_error = res$se,
+    Z = res$zval,
+    p = res$pval,
+    LowerCI = res$ci.lb,
+    UpperCI = res$ci.ub
+  )
+
+  # Add the row to the dataframe
+  meta_analysis_table <- rbind(meta_analysis_table, row)
+}
+
+row.names(meta_analysis_table) <- NULL
+# display the table, without displaying the index
+meta_analysis_table %>%
+  kable("latex", booktabs = TRUE, caption = "Meta-analysis of all hypothesis") %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down")) 
+```
+
+```{r, include = FALSE}
+MA_riddles = data.frame()
+MA_whodunits = data.frame()
+
+behavioural_hypothesis = c("H2.1", "H2.2")
+riddles_studies = c("Study 1", "Study 2", "Study 3")
+whodunits_studies = c("Study 4", "Study 5")
+
+for (i in seq_along(behavioural_hypothesis)) {
+      # Get the data for the current hypothesis
+  current_data <- paper_MA %>% 
+    filter(hypothesis == behavioural_hypothesis[i]) %>% 
+    # filter for study in study 1 to 3
+    filter(study %in% riddles_studies)
+  
+  # Perform the meta-analysis using the rma.uni function
+  res <- rma.uni(yi = current_data$estimate_scaled, sei = current_data$std_error, method = "REML")
+  
+  # Create a row
+  row = data.frame(
+    hypothesis = behavioural_hypothesis[i],  
+    estimate = res$b,
+    std_error = res$se,
+    Z = res$zval,
+    p = res$pval,
+    LowerCI = res$ci.lb,
+    UpperCI = res$ci.ub
+  )
+  
+  MA_riddles = rbind(MA_riddles, row)
+}
+
+for (i in seq_along(behavioural_hypothesis)) {
+      # Get the data for the current hypothesis
+  current_data <- paper_MA %>% 
+    filter(hypothesis == behavioural_hypothesis[i]) %>% 
+    # filter for study in study 1 to 3
+    filter(study %in% whodunits_studies)
+  
+  # Perform the meta-analysis using the rma.uni function
+  res <- rma.uni(yi = current_data$estimate_scaled, sei = current_data$std_error, method = "REML")
+  
+  # Create a row
+  row = data.frame(
+    hypothesis = behavioural_hypothesis[i],  
+    estimate = res$b,
+    std_error = res$se,
+    Z = res$zval,
+    p = res$pval,
+    LowerCI = res$ci.lb,
+    UpperCI = res$ci.ub
+  )
+  
+  MA_whodunits = rbind(MA_whodunits, row)
+}
+
+# display the table
+
+row.names(MA_riddles) <- NULL
+
+MA_riddles %>% 
+  kable("latex", booktabs = TRUE, caption = "Meta-analysis of behavioral hypothesis for Riddles studies") %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
+
+row.names(MA_whodunits) <- NULL
+
+MA_whodunits %>%
+  kable("latex", booktabs = TRUE, caption = "Meta-analysis of behavioral hypothesis for Whodunits studies") %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
+```
+
+# 4. Exploratory Analysis
+
+**RQ1**: Is the declarative measure of consumption ("willingness to consume") a predictor of the behavioral measure of consumption ("Actual Consumption") ?
+
+```{r, echo = TRUE}
+S3_rq1 = glm(factor(actual_consumption) ~ scale(consume_mean),
+            family = binomial(link = "probit"), data = data_3)
+S5_rq1 = glm(factor(actual_consumption) ~ scale(consume), 
+            family = binomial(link = "probit"), data = data_5)
+```
+
+```{r}
+export_summs(S3_rq1, S5_rq1, robust = c("HC1", "HC1"), 
+             model.names = c("Actual Consumption S3", "Actual Consumption S5"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Actual Consumption as a function of willingness to consume")
+```
+\FloatBarrier
+**RQ2**: Does finding the solution by oneself has an influence on the intensity of insight?
+
+```{r echo = TRUE}
+S1_rq2_1 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_High1)
+S1_rq2_2 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_Low1)
+
+S2_rq2_1 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_High2)
+S2_rq2_2 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_Low2)
+
+S3_rq2_1 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_High3)
+S3_rq2_2 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_Low3)
+```
+
+```{r}
+export_summs(S1_rq2_1, S1_rq2_2, robust = c("HC1", "HC1"), 
+             model.names = c("Insight (HI Condition) S1", "Insight (LI Condition) S1"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Insight as a function of finding the solution by oneself")
+```
+
+```{r}
+export_summs(S2_rq2_1, S2_rq2_2, robust = c("HC1", "HC1"), 
+             model.names = c("Insight (HI Condition) S2", "Insight (LI Condition) S2"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Insight as a function of finding the solution by oneself")
+```
+
+```{r}
+export_summs(S3_rq2_1, S3_rq2_2, robust = c("HC1", "HC1"), 
+             model.names = c("Insight (HI Condition) S3", "Insight (LI Condition) S3"), digits = 4,
+             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Insight as a function of finding the solution by oneself")
+```
+
+```{r}
+# meta-analysis for S1_rq2_1, S2_rq2_1, S3_rq2_1
+
+# estimate and standard error in a dataframe
+
+rq2_1 = data.frame(
+  estimate = c(fixef(S1_rq2_1)[2], fixef(S2_rq2_1)[2], fixef(S3_rq2_1)[2]),
+  std_error = c(summary(S1_rq2_1)$coefficients[, "Std. Error"][2], 
+                summary(S2_rq2_1)$coefficients[, "Std. Error"][2], 
+                summary(S3_rq2_1)$coefficients[, "Std. Error"][2]))
+
+# meta-analysis
+
+res_rq2_1 = rma.uni(yi = rq2_1$estimate, sei = rq2_1$std_error, method = "REML")
+```
+
+```{r}
+# meta-analysis for S1_rq2_2, S2_rq2_2, S3_rq2_2
+
+# estimate and standard error in a dataframe
+
+rq2_2 = data.frame(
+  estimate = c(fixef(S1_rq2_2)[2], fixef(S2_rq2_2)[2], fixef(S3_rq2_2)[2]),
+  std_error = c(summary(S1_rq2_2)$coefficients[, "Std. Error"][2], 
+                summary(S2_rq2_2)$coefficients[, "Std. Error"][2], 
+                summary(S3_rq2_2)$coefficients[, "Std. Error"][2]))
+
+# meta-analysis
+
+res_rq2_2 = rma.uni(yi = rq2_2$estimate, sei = rq2_2$std_error, method = "REML")
+```
+
+```{r}
+# display the table
+RQ2_MA = data.frame()
+
+row = data.frame(
+    hypothesis = "Insight ~ Solved, HI Condition",  
+    estimate = res_rq2_1$b,
+    std_error = res_rq2_1$se,
+    Z = res_rq2_1$zval,
+    p = res_rq2_1$pval,
+    LowerCI = res_rq2_1$ci.lb,
+    UpperCI = res_rq2_1$ci.ub
+  )
+
+RQ2_MA = rbind(RQ2_MA, row)
+
+row = data.frame(
+    hypothesis = "Insight ~ Solved, LI Condition",  
+    estimate = res_rq2_2$b,
+    std_error = res_rq2_2$se,
+    Z = res_rq2_2$zval,
+    p = res_rq2_2$pval,
+    LowerCI = res_rq2_2$ci.lb,
+    UpperCI = res_rq2_2$ci.ub
+  )
+
+RQ2_MA = rbind(RQ2_MA, row)
+
+row.names(RQ2_MA) = NULL
+
+RQ2_MA %>%
+  kable("latex", booktabs = TRUE, caption = "Meta-analysis of RQ2") %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
+```
+\FloatBarrier 
+
+# 5. Materials for whodunits studies
+
+## 5.1 - Chocolate
+
+Sir William, a wealthy middle-aged man in the midst of a bitter divorce, receives at his club a box of chocolates, delivered by an anonymous courier. He has no idea where the chocolates came from, and is all the more surprised that he really doesn't like chocolate. As he looks for someone to give the chocolates to, he turns to his chubby friend at the club, Mr. Beresford. Sir William tells him:
+
+You mentioned that you were looking for a small gift for your wife, so I'd happily give you those, are you interested?
+
+Mr. Beresford replies:
+
+if you'd asked me that last week, I would have said, absolutely not, as my wife was until then on a strict no sugar diet. Fortunately, she's done with that, and we can enjoy delicacies together again. So if you absolutely don't want the chocolate box, I'd happily take it off you!
+
+As a result, Sir Williams gives Mr. Beresford the chocolate box.
+
+Mr. Beresford goes home and, after dinner, he gives his wife the chocolates, and they enjoy a few together while watching a movie. During the night, they both feel sick, and Mr. Beresford manages to call an ambulance. Tragically, Mrs. Beresford dies on the way to the hospital, while Mr. Beresford is severely sick but survives after days of treatment.
+
+The police establish that the death of Mrs. Beresford, and the sickness of her husband, is due to the chocolates, which had been poisoned with nitrobenzene. Given the average dose of nitrobenzene in a chocolate, six chocolates would have been enough to kill an adult. Mrs. Beresford ate a dozen chocolates, while her husband ate only two, which saved his life. Police traced the chocolates back to the small, luxury Maison Fauchon chocolate company that made them. It turns out that Sir William's box of chocolates was part of a special request from an unknown customer. The delivery man from the Maison Fauchon remembered the order, because he had been specifically instructed to leave the chocolate box in a park bench, which he thought was weird, given that these are expensive chocolates.
+
+The police weren't able to prove anyone's guilt at first, when Mr. Beresford started making some strong accusations. He said that after his wife's death, he found proof that she had been having a passionate affair with Sir William. Looking at the evidence, the police confirmed that this was the case, and they also found, in secret texts that no one had access to, that she had put a stop to the affair two weeks before her death, and that she and Sir William had had no contact since. Mr. Beresford then accused Sir Willam of poisoning his wife, so the affair wouldn't come out, as the latter would then be sure to lose most of his fortune in the divorce proceedings. According to Mr. Beresford, Sir William ordered the chocolates, poisoned them, and then paid a henchman to deliver them to the club. He then found an excuse to give them to someone else, making it look like he was the intended victim.
+
+In spite of these accusations, the police end up arresting Mr. Beresford. Here's the reasoning of the detective behind the arrest:
+
+**Insight:**
+
+"Mr. Beresford was already aware of the affair, and he thought of a plan to get rid of both his wife and her lover, while making it very unlikely he would be suspected. He ordered the chocolates, poisoned them, and paid a henchman to deliver them to the club. Knowing that Sir William doesn't like chocolate, he mentioned that he had to find a small gift for his wife, making it natural for Sir William to offer him the chocolates. He was then careful to only eat a few chocolates--even though he would usually have eaten most of the box. If his plan worked well, his wife would die, and Sir William would go to jail for a long time.
+
+Even though both Mr. Beresford and Sir William had a motive, we can tell that Mr. Beresford is the culprit because he was the only one to know that his wife had stopped her diet, and so would eat the chocolates. Since Mrs. Beresford had put an end to this diet a week after she put an end to the affair with Sir William, and they had had no contact since, there was no way for him to know, and thus he would never have planned to poison her with chocolates.
+
+Therefore, Mr. Beresford is the one who killed his wife."
+
+**No insight:**
+
+"Sir William had to go on an unexpected business trip abroad, and he had just come back on the day of the death. They also found no way for him to have communicated with someone who could have acted for him. That means that he had no opportunity to get the chocolates and poison them.
+
+As we interrogated Mr. Beresford, we found that his behavior during the questioning was suspicious. As a result, we pushed him harder, trying to catch him being inconsistent. After several hours of questioning, he ended up admitting that he was the culprit. He ordered the chocolates to kill his unfaithful wife and have her lover accused and sent to jail. He also told us where to find in his house the bill for the chocolates. We also discovered that Mr. Beresford had accumulated a lot of debt and that his wife's life insurance allowed him to pay it off.
+
+Therefore, Mr. Beresford is the one who killed his wife."
+
+## 5.2 - Nightmare
+
+The old billionaire Edward Conway has invited the famous detective Richard Burton to his home. Mr. Conway lives in an isolated mansion. When he arrives, Burton sees three workers moving rubble in front of the house. On the steps, the butler, Murray, opens the door and explains that the house is being renovated. He apologizes for the inconvenience, and Burton shows him the invitation he received from Mr. Conway.
+
+Murray informs Burton that it is standard procedure to introduce visitors first to the office of the secretary who notifies Mr. Conway of their visit, and he brings Burton to the secretary's office. Burton knocks on the door and an authoritative voice tells him to enter. Once inside, a tall, austere, bespectacled man greets the detective, coldly. It is not the secretary who is there, but Mr. Conway. He explains to Burton that he is using his secretary's office because there is currently work going on in his own office, and asks him to sit. Burton does so, facing a large window, where a strong sun is setting.
+
+For several weeks he has been having the same dream, Mr. Conway says. In this nightmare, he is killing himself in front of his office window with the gun he keeps in his drawer. Not being suicidal, Mr. Conway asks Burton if he has ever encountered cases of murder by suggestion. Mr. Conway wonders if someone could use hypnosis to drive him to suicide by making him dream of ending his life, although he does not remember being hypnotized. He mentions a number of business rivals whom he ruined, and who might want to seek revenge in this perverted manner.
+
+Burton is taken aback because he has never encountered such a case and admits that he's not sure whether he can help Mr. Conway. Mr. Conway then dismisses the detective, and asks him to give back the invitation, as he wants to keep this meeting discreet. However, once Burton is in the hallway, he realizes that he has actually given another letter, addressed to a colleague. Therefore, he goes back to the office, gives the right letter to Mr. Conway, apologizes and goes home.
+
+A week later, Mr. Conway is found dead by apparent suicide. On the same day, the police called Burton to the scene because his letter of invitation had been found on Mr. Conway's table. Once he gets there, he notices that the work is finished, and that the workers have done a good job cleaning up, except for a few pieces of glass on the landing of the house that his experienced eye can't help but notice. Mr. Conway used to water the plants on his windowsill at 1 p.m. sharp every day, and the plants had been watered. Therefore, Mr. Conway's time of death is most likely after 1 p.m. In the house, in addition to the police, are Mr. Conway's widow, and his daughter from a previous marriage, as well as the butler Murray, the cleaning lady Miss Hurtigan and his secretary Mr. Fisher.
+
+Burton first tells the police the contents of his conversation with Mr. Conway. Mr. Conway's widow confirms that her husband had been preoccupied in recent weeks by recurring dreams of suicide. The detective is then introduced to Mr. Conway's office, which is next to his secretary's, entering through a large carved door. Mr. Conway's body is lying in front of his open window, holding a revolver in his hand, dead from a bullet to the head. The body was discovered by Mr. Fisher, who had come to bring him a briefcase of documents, followed a few seconds later by Murray, who was alerted by Mr. Fisher's cry. The body is not wearing glasses, which is strange because Mr. Conway, being extremely short-sighted, rarely took off his glasses. This absence of glasses is all the more puzzling because Mr. Conway had a spare pair in case he lost the first one.
+
+None of the workers heard the shot, which is probably due to them wearing noise-canceling headphones, the noise of the work, and the heavy door of Mr. Conway office. Despite the back and forth of the workers in front of Conway's office, no one saw anyone enter Mr. Conway's office--except Mr. Conway himself earlier in the morning. For most of the day of the shooting, Betsy Conway and Miss. Conway said they were either in another aisle, as the work near Mr. Conway's office was quite noisy. Mr. Conway has kept working there, thanks to the heavy insulation of his office. Fisher, Murray and Hurtigan, to be able to keep working, had borrowed noise-canceling headphones from the workers and continued their tasks as usual. As a result, no one seems to have heard the gunshot.
+
+Mr. Conway's daughter and widow each inherit half of the deceased's considerable fortune. They do not seem particularly distraught, possibly because Mr. Conway was notorious for his bad temper.
+
+A few days later, Burton contacted the police and told them the following:
+
+**High Insight**
+
+"The individual I met a week ago was not Mr. Conway, but his secretary Mr. Fisher, disguised and wearing makeup. It couldn't have been Murray, since he was the one who brought me into the office. Moreover, who else could have used Mr. Fisher's office, knowing that he works there every day. I could not notice the deception because I was partially blinded by the light of the setting sun.
+
+Mr. Fisher dressed up as Edward Conway, welcomed me into the secretary's office, knowing that the real Mr. Conway would probably be in his own office. Mr. Conway could not hear our conversation because his office is so well insulated. Moreover, Mr. Fisher, having put on Mr. Conway's second pair of glasses, which were unsuitable for his eyesight, did not realize that I had handed him the wrong letter at the end of our interview.
+
+Speaking of this letter, Mr. Fisher has asked me to give it to him before I left, so that the police would find it in Mr. Conway's belongings, interview me, and I would tell this made up story of premonitory dreams, confirming the apparent suicide. The real Mr. Conway would not have kept the letter on his desk for a week, he would have destroyed the letter so that people would not know about our appointment. Mr. Fisher then shot Mr. Conway from his office window, as Mr. Conway was watering the plants.
+
+Mr. Conway's glasses fell outside on the landing of the house and shattered there. Later in the day, Mr. Fisher retrieved the frames, but did not diligently clean up the broken glass. Before Murray arrived, Mr. Fisher put the gun hidden in his briefcase into Mr. Conway's hands. I suspect that Mr. Fisher set it up with the help of Mrs. Conway, the only one to have heard of this whimsical story of dreams. Unable to disguise herself as Mr. Conway to deceive me, Mrs. Conway had to offer Mr. Fisher part of the inheritance in exchange for his help in killing her husband.
+
+Therefore, I accuse Harry Fisher and Betsy Conway of killing Mr. Conway."
+
+**Low Insight**
+
+"I have scrupulously checked the alibi of each of the protagonists. On the day of the murder Murray was working in the basement, he could not tell us at first, but he was accompanied but Miss Hurtigan. The two have a secret relationship that could have gotten them fired if the Conway family found out, since such relationships are prohibited in their employment contracts. Faced with my pressing questions, they finally confessed the truth.
+
+With the help of my partners, I tailed the three remaining suspects for several days. I noticed several meetings between Mr. Fisher and Betsy Conway, the widow. I was even able to take pictures of the two of them kissing furtively at a coffee shop. Not only that, but I also spoke with relatives of Mr. Fisher, who testified that he had told them to be that "he was about to hit it big" and that "his life wouldn't be the same". Furthermore, I was subsequently contacted by Miss Conway, the daughter of the deceased, who gave me audio recordings she had made of Mr. Fisher and Mrs. Conway explicitly planning the murder of Mr. Conway.
+
+The forensic analysis did not find any gunshot residue on Mr. Conway's temple consistent, which is inconsistent with a suicide. Finally, the scientific department thought of gathering the fingerprints on the revolver found at the crime scene, but not on the bullets loaded into it. I therefore suggested to the detectives that they also gather fingerprints on the bullets. It turns out that Mr. Fisher had wiped his fingerprints off the revolver, but had forgotten to do the same with the bullets he put in the cylinder.
+
+Therefore, I accuse Mr. Fisher and Betsy Conway of killing Mr. Conway."
