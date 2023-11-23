@@ -2,7 +2,7 @@
 This is the github repository for the following paper: *The experience of insight explains the cultural success of riddles and whodunits.* Authors are anonymous for the peer-review process.
 
 ## Introduction
-This github repository 
+This github repository aims to be computationaly reproducible (in one click). Data and analysis code are provided. Materials are open (stimuli used and survey files). Pre-registrations are available on the osf project: https://osf.io/7qwt2/ 
 
 ## Prerequisites
 R version 4.2.2 (2022-10-31 ucrt)
