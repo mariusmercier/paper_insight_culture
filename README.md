@@ -5,9 +5,9 @@ This is the github repository for the following paper: *The experience of insigh
 This github repository aims to be computationaly reproducible (in one click). Data and analysis code are provided. Materials are open (stimuli used and survey files). Pre-registrations are available on the osf project: https://osf.io/7qwt2/ 
 
 ## Prerequisites
-R version 4.2.2 (2022-10-31 ucrt)
-RStudio 2023.09.1
-Used libraries are listed in the manuscript and in the code
+- R version 4.2.2 (2022-10-31 ucrt)
+- RStudio 2023.09.1
+- Used libraries are listed in the manuscript and in the code
 
 ## Cloning the Repository
 To clone the repository to your local machine, follow these steps:
