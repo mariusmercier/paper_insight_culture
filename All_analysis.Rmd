@@ -227,7 +227,8 @@ S1_h13_2 = lmer(scale(sharing) ~ scale(insight) + factor(solved) + factor(abilit
 ```{r}
 export_summs(S1_h13_1, S1_h13_2, robust = c("HC1", "HC1"),
              model.names = c("Will. to Share High Insight Condition", "Will. to Share Low Insight Condition"), digits = 4,
-             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC")) %>% set_caption("Study 1: Willingness to share as a function of Insight within each condition")
+             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Problem Solved" = "factor(solved)1", "1 other problem solved vs. 0" = "factor(ability_other)1", "2 other problems solved vs. 0" = "factor(ability_other)2", "Time spent" = "log(time)")) %>% set_caption("Study 1: Willingness to share as a function of Insight within each condition")
 ```
 
 \FloatBarrier
@@ -391,7 +392,8 @@ S2_h13_2 = lmer(scale(sharing) ~ scale(insight)
 ```{r, results='hold'}
 export_summs(S2_h13_1, S2_h13_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share High Insight Condition", "Will. to Share Low Insight Condition"), digits = 4,
-             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC")) %>% set_caption("Study 2: Willingness to share as a function of Insight, within each condition")
+             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Problem Solved" = "factor(solved)1", "1 other problem solved vs? 0" = "factor(ability_other)1", "2 other problems solved vs. 0" = "factor(ability_other)2", "Time spent" = "log(time)")) %>% set_caption("Study 2: Willingness to share as a function of Insight, within each condition")
 
 ```
 
@@ -576,7 +578,8 @@ S3_h13_2 = lmer(scale(sharing) ~ scale(insight)
 ```{r, results='hold'}
 export_summs(S3_h13_1, S3_h13_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share High Insight Condition", "Will. to Share Low Insight Condition"), digits = 4,
-             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC")) %>% set_caption("Study 3: Willingness to share as a function of insight, within each condition")
+             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Problem Solved" = "factor(solved)1", "1 other problem solved vs. 0" = "factor(ability_other)1", "2 other problems solved vs. 0" = "factor(ability_other)2", "Time spent" = "log(time)")) %>% set_caption("Study 3: Willingness to share as a function of insight, within each condition")
 ```
 
 \FloatBarrier
@@ -603,7 +606,8 @@ S3_h33_2 = lmer(scale(consume) ~ scale(insight)
 ```{r, results='hold'}
 export_summs(S3_h33_1, S3_h33_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Consume High Insight Condition", "Will. to Consume Low Insight Condition"), digits = 4,
-             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC")) %>% set_caption("Study 3: Willingness to Consume as a function of insight, within each condition")
+             statistics = c(N = "nobs", AIC = "AIC", BIC = "BIC"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Problem Solved" = "factor(solved)1", "1 other problem solved vs. 0" = "factor(ability_other)1", "2 other problems solved vs. 0" = "factor(ability_other)2", "Time spent" = "log(time)")) %>% set_caption("Study 3: Willingness to Consume as a function of insight, within each condition")
 ```
 
 \FloatBarrier
@@ -719,7 +723,8 @@ paper_MA = data.frame(study = "Study 1", hypothesis = "H1.1", estimate_scaled = 
 ```{r}
 export_summs(S1_h11_1, S1_h11_2, S1_h11_3, robust = c("HC1", "HC1", "HC1"), 
              model.names = c("Will. to Share", "Will. to share", "Will. to share"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Willingness to Share as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)","Being in the High Insight Condition" = "factor(condition)1", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")) %>% set_caption("Study 1: Willingness to Share as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -746,10 +751,11 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 1", hypothesis = "H1.2", es
 ```{r}
 export_summs(S1_h12_1, S1_h12_2, S1_h12_3, robust = c("HC1", "HC1", "HC1"), 
              model.names = c("Will. to Share", "Will. to share", "Will. to share"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Willingness to Share as a function of insight, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight_mean)", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")) %>% set_caption("Study 1: Willingness to Share as a function of insight, with and without controls")
 ```
 
 \FloatBarrier
+
 
 ### H2.1
 
@@ -773,7 +779,8 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 1", hypothesis = "H2.1", es
 ```{r}
 export_summs(S1_h21_1, S1_h21_2, S1_h21_3, robust = c("HC1", "HC1", "HC1"), 
              model.names = c("Actual Consumption", "Actual Consumption", "Actual Consumption"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Actual Consumption as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")) %>% set_caption("Study 1: Actual Consumption as a function of condition, with and without controls")
 ```
 
 ```{r, include= FALSE}
@@ -804,7 +811,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 1", hypothesis = "H2.2", es
 ```{r}
 export_summs(S1_h22_1, S1_h22_2, S1_h22_3, robust = c("HC1", "HC1", "HC1"), 
              model.names = c("Actual Consumption", "Actual Consumption", "Actual Consumption"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Actual Consumption as a function of insight, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight_mean)", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")
+               ) %>% set_caption("Study 1: Actual Consumption as a function of insight, with and without controls")
 ```
 
 \FloatBarrier
@@ -892,7 +901,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 2", hypothesis = "H1.1", es
 ```{r}
 export_summs(S2_h11_1, S2_h11_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share", "Will. to share"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Willingness to share as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1")
+               ) %>% set_caption("Study 2: Willingness to share as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -915,7 +926,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 2", hypothesis = "H1.2", es
 ```{r}
 export_summs(S2_h12_1, S2_h12_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share", "Will. to share"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Willingness to share as a function of insight, with and without controls")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight_mean)", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1")
+               ) %>% set_caption("Study 2: Willingness to share as a function of insight, with and without controls")
 ```
 
 \FloatBarrier
@@ -938,7 +951,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 2", hypothesis = "H2.1", es
 ```{r}
 export_summs(S2_h21_1, S2_h21_2, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Actual consumption as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1")
+               ) %>% set_caption("Study 2: Actual consumption as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -965,7 +980,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 2", hypothesis = "H2.2", es
 ```{r}
 export_summs(S2_h22_1, S2_h22_2, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Actual consumption as a function of insight, with and without controls")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight_mean)", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1")
+             ) %>% set_caption("Study 2: Actual consumption as a function of insight, with and without controls")
 ```
 
 \FloatBarrier
@@ -1053,7 +1070,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H1.1", es
 ```{r}
 export_summs(S3_h11_1, S3_h11_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share", "Will. to share"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Willingness to share as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")
+               ) %>% set_caption("Study 3: Willingness to share as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -1076,7 +1095,8 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H1.2", es
 ```{r}
 export_summs(S3_h12_1, S3_h12_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share", "Will. to share"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Willingness to share as a function of insight, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight_mean)", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")
+               ) %>% set_caption("Study 3: Willingness to share as a function of insight, with and without controls")
 ```
 
 \FloatBarrier
@@ -1099,7 +1119,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H2.1", es
 ```{r}
 export_summs(S3_h21_1, S3_h21_2, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Actual consumption as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")
+               ) %>% set_caption("Study 3: Actual consumption as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -1122,7 +1144,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H2.2", es
 ```{r}
 export_summs(S3_h22_1, S3_h22_2, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Actual consumption as a function of insight, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight_mean)", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")
+               ) %>% set_caption("Study 3: Actual consumption as a function of insight, with and without controls")
 ```
 
 \FloatBarrier
@@ -1145,7 +1169,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H3.1", es
 ```{r}
 export_summs(S3_h31_1, S3_h31_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Consume", "Will. to Consume"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Willingness to consume as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")
+               ) %>% set_caption("Study 3: Willingness to consume as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -1168,7 +1194,8 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 3", hypothesis = "H3.2", es
 ```{r}
 export_summs(S3_h32_1, S3_h32_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Consume", "Will. to Consume"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Willingness to consume as a function of insight, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight_mean)", "1 problem solved vs. 0" = "factor(ability)1", "2 problems solved vs. 0" = "factor(ability)2", "3 problems solved vs. 0" = "factor(ability)3", "Time Spent" = "scale(mean_RT)", "Not understood 1 problem vs. 0" = "factor(not_understood)1", "Not understood 2 problems vs. 0" = "factor(not_understood)2", "Not understood 3 problems vs. 0" = "factor(not_understood)3")
+               ) %>% set_caption("Study 3: Willingness to consume as a function of insight, with and without controls")
 ```
 
 \FloatBarrier
@@ -1312,7 +1339,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 4", hypothesis = "H1.1", es
 ```{r}
 export_summs(S4_h11_1, S4_h11_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share", "Will. to share"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Willingness to share as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)")
+               ) %>% set_caption("Study 4: Willingness to share as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -1333,7 +1362,9 @@ S4_h12_2 = lmer(scale(sharing) ~ scale(insight)
 ```{r}
 export_summs(S4_h12_1, S4_h12_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share (HI Condition)", "Will. to share (HI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Willingness to share as a function of insight, with and without controls, within the High Insight Condition")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)")
+               ) %>% set_caption("Study 4: Willingness to share as a function of insight, with and without controls, within the High Insight Condition")
 ```
 
 \FloatBarrier
@@ -1352,7 +1383,9 @@ S4_h12_4 = lmer(scale(sharing) ~ scale(insight)
 ```{r}
 export_summs(S4_h12_3, S4_h12_4, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share (LI Condition)", "Will. to share (LI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Willingness to share as a function of insight, with and without controls, within the Low Insight Condition")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)")
+               ) %>% set_caption("Study 4: Willingness to share as a function of insight, with and without controls, within the Low Insight Condition")
 ```
 
 \FloatBarrier
@@ -1381,7 +1414,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 4", hypothesis = "H2.1", es
 ```{r}
 export_summs(S4_h21_1, S4_h21_2, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Actual consumption as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)")
+               ) %>% set_caption("Study 4: Actual consumption as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -1402,7 +1437,9 @@ S4_h22_2 = glmer(actual_consumption ~ scale(insight)
 ```{r}
 export_summs(S4_h22_1, S4_h22_2, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption (HI Condition)", "Actual Consumption (HI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Actual consumption as a function of insight, with and without controls, within the High Insight Condition")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)")
+             ) %>% set_caption("Study 4: Actual consumption as a function of insight, with and without controls, within the High Insight Condition")
 ```
 
 ```{r S4 H2.2 Low Insight, echo = TRUE}
@@ -1419,7 +1456,9 @@ S4_h22_4 = glmer(actual_consumption ~ scale(insight)
 ```{r}
 export_summs(S4_h22_3, S4_h22_4, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption (LI Condition)", "Actual Consumption (LI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 4: Actual consumption as a function of insight, with and without controls, within the Low Insight Condition")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)")
+               ) %>% set_caption("Study 4: Actual consumption as a function of insight, with and without controls, within the Low Insight Condition")
 ```
 
 \FloatBarrier
@@ -1572,7 +1611,8 @@ S5_h11_1 = lm(scale(sharing) ~ factor(condition),
               data_5)
 
 S5_h11_2 = lm(scale(sharing) ~ factor(condition)
-              + scale(RT) + scale(convince),
+              + scale(RT) + scale(convince) + scale(as.numeric(pre_test)), 
+              coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))"),
               data_5)
 ```
 
@@ -1583,7 +1623,9 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H1.1", es
 ```{r}
 export_summs(S5_h11_1, S5_h11_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share", "Will. to share"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to share as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")
+               ) %>% set_caption("Study 5: Willingness to share as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -1596,7 +1638,7 @@ S5_h12_1 = lmer(scale(sharing) ~ scale(insight)
               data_High5)
 
 S5_h12_2 = lmer(scale(sharing) ~ scale(insight)
-              + scale(RT) + scale(convince)
+              + scale(RT) + scale(convince) + scale(as.numeric(pre_test))
               + (1|story),
               data_High5)
 ```
@@ -1604,7 +1646,8 @@ S5_h12_2 = lmer(scale(sharing) ~ scale(insight)
 ```{r}
 export_summs(S5_h12_1, S5_h12_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share (HI Condition)", "Will. to share (HI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to share as a function of insight, with and without controls, within the High Insight Condition")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")) %>% set_caption("Study 5: Willingness to share as a function of insight, with and without controls, within the High Insight Condition")
 ```
 
 \FloatBarrier
@@ -1615,7 +1658,7 @@ S5_h12_3 = lmer(scale(sharing) ~ scale(insight)
               data_Low5)
 
 S5_h12_4 = lmer(scale(sharing) ~ scale(insight)
-              + scale(RT) + scale(convince)
+              + scale(RT) + scale(convince) + scale(as.numeric(pre_test))
               + (1|story),
               data_Low5)
 ```
@@ -1623,7 +1666,9 @@ S5_h12_4 = lmer(scale(sharing) ~ scale(insight)
 ```{r}
 export_summs(S5_h12_3, S5_h12_4, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Share (LI Condition)", "Will. to share (LI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to share as a function of insight, with and without controls, within the Low Insight Condition")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")
+             ) %>% set_caption("Study 5: Willingness to share as a function of insight, with and without controls, within the Low Insight Condition")
 ```
 
 \FloatBarrier
@@ -1641,7 +1686,7 @@ S5_h21_1 = glm(actual_consumption ~ factor(condition),
                family = binomial(link = "probit"), data_5)
 
 S5_h21_2 = glm(actual_consumption ~ factor(condition)
-               + scale(RT) + scale(convince),
+               + scale(RT) + scale(convince) + scale(as.numeric(pre_test)),
                family = binomial(link = "probit"), data_5)
 ```
 
@@ -1652,7 +1697,10 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H2.1", es
 ```{r}
 export_summs(S5_h21_1, S5_h21_2, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption", "Actual Consumption"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Actual consumption as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)",
+                       "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")
+             ) %>% set_caption("Study 5: Actual consumption as a function of condition, with and without controls")
 ```
 
 \FloatBarrier
@@ -1665,7 +1713,7 @@ S5_h22_1 = glmer(actual_consumption ~ scale(insight)
                family = binomial(link = "probit"), data_High5)
 
 S5_h22_2 = glmer(actual_consumption ~ scale(insight)
-               + scale(RT) + scale(convince)
+               + scale(RT) + scale(convince) + scale(as.numeric(pre_test))
                + (1|story),
                family = binomial(link = "probit"), data_High5)
 ```
@@ -1673,7 +1721,9 @@ S5_h22_2 = glmer(actual_consumption ~ scale(insight)
 ```{r}
 export_summs(S5_h22_1, S5_h22_2, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption (HI Condition)", "Actual Consumption (HI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Actual consumption as a function of insight, with and without controls, within the High Insight Condition")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")
+             ) %>% set_caption("Study 5: Actual consumption as a function of insight, with and without controls, within the High Insight Condition")
 ```
 
 \FloatBarrier
@@ -1684,7 +1734,7 @@ S5_h22_3 = glmer(actual_consumption ~ scale(insight)
                family = binomial(link = "probit"), data_Low5)
 
 S5_h22_4 = glmer(actual_consumption ~ scale(insight)
-               + scale(RT) + scale(convince)
+               + scale(RT) + scale(convince) + scale(as.numeric(pre_test))
                + (1|story),
                family = binomial(link = "probit"), data_Low5)
 ```
@@ -1692,7 +1742,8 @@ S5_h22_4 = glmer(actual_consumption ~ scale(insight)
 ```{r}
 export_summs(S5_h22_3, S5_h22_4, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption (LI Condition)", "Actual Consumption (LI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Actual consumption as a function of insight, with and without controls, within the Low Insight Condition")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")) %>% set_caption("Study 5: Actual consumption as a function of insight, with and without controls, within the Low Insight Condition")
 
 ```
 
@@ -1721,7 +1772,8 @@ paper_MA = rbind(paper_MA, data.frame(study = "Study 5", hypothesis = "H3.1", es
 ```{r}
 export_summs(S5_h31_1, S5_h31_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Consume", "Will. to Consume"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to consume as a function of condition, with and without controls")
+             statistics = (R2adj = "adj.r.squared"), coefs = c("Intercept" = "(Intercept)", "Being in the High Insight Condition" = "factor(condition)1", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")
+             ) %>% set_caption("Study 5: Willingness to consume as a function of condition, with and without controls")
 ```
 
 \FloatBarrier 
@@ -1741,7 +1793,9 @@ S5_h32_2 = lmer(scale(consume) ~ scale(insight)
 ```{r}
 export_summs(S5_h32_1, S5_h32_2, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Consume (HI Condition)", "Will. to Consume (HI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to consume as a function of insight, with and without controls, within the High Insight Condition")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")
+               ) %>% set_caption("Study 5: Willingness to consume as a function of insight, with and without controls, within the High Insight Condition")
 ```
 
 \FloatBarrier
@@ -1759,7 +1813,8 @@ S5_h32_4 = lmer(scale(consume) ~ scale(insight)
 ```{r}
 export_summs(S5_h32_3, S5_h32_4, robust = c("HC1", "HC1"), 
              model.names = c("Will. to Consume (LI Condition)", "Will. to Consume (LI Condition)"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 5: Willingness to consume as a function of insight, with and without controls, within the Low Insight Condition")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Reported Insight" = "scale(insight)", "Time Spent" = "scale(RT)", "Convincingness" = "scale(convince)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")) %>% set_caption("Study 5: Willingness to consume as a function of insight, with and without controls, within the Low Insight Condition")
 ```
 
 \FloatBarrier
@@ -1836,6 +1891,16 @@ combined_data$high_level_hypothesis <- ifelse(grepl("H1", combined_data$hypothes
                                               
 combined_data$high_level_hypothesis <- factor(combined_data$high_level_hypothesis, levels = c("Willingness to Share", "Actual Consumption", "Willingness to Consume"))
 
+#rename hypothesis for more meaningful names
+
+remplacement <- c("H1.1" = "~ Condition (H1.1)",
+                  "H1.2" = "~ Insight (H1.2)",
+                  "H2.1" = "~ Condition (H2.1)",
+                  "H2.2" = "~ Insight (H2.2)",
+                  "H3.1" = "~ Condition (H3.1)",
+                  "H3.2" = "~ Insight (H3.2)")
+
+combined_data$hypothesis <- recode(combined_data$hypothesis, !!!remplacement)
 
 ggplot(data = combined_data, aes(x = estimate_scaled, y = study)) +
   geom_point(aes(y = as.numeric(study) + Offset, shape = condition,  color = Significance), size = 3) +
@@ -1852,9 +1917,7 @@ ggplot(data = combined_data, aes(x = estimate_scaled, y = study)) +
   labs(shape = "Condition") +
   theme_bw()
 
-
-
-#ggsave("meta_plot.pdf", height = 6, width = 10) 
+ggsave("meta_plot.pdf", height = 6, width = 10) 
 ```
 
 ```{r, include = FALSE}
@@ -1979,7 +2042,9 @@ S5_rq1 = glm(factor(actual_consumption) ~ scale(consume),
 ```{r}
 export_summs(S3_rq1, S5_rq1, robust = c("HC1", "HC1"), 
              model.names = c("Actual Consumption S3", "Actual Consumption S5"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Actual Consumption as a function of willingness to consume")
+             statistics = (R2adj = "adj.r.squared"), 
+             coefs = c("Intercept" = "(Intercept)", "Mean Consumption" = "scale(consume_mean)","Consumption" = "scale(consume)")
+               ) %>% set_caption("Actual Consumption as a function of willingness to consume")
 ```
 \FloatBarrier
 **RQ2**: Does finding the solution by oneself has an influence on the intensity of insight?
@@ -1998,19 +2063,23 @@ S3_rq2_2 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(so
 ```{r}
 export_summs(S1_rq2_1, S1_rq2_2, robust = c("HC1", "HC1"), 
              model.names = c("Insight (HI Condition) S1", "Insight (LI Condition) S1"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 1: Insight as a function of finding the solution by oneself")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Problem Solved" = "factor(solved)1")) %>% set_caption("Study 1: Insight as a function of finding the solution by oneself")
 ```
 
 ```{r}
 export_summs(S2_rq2_1, S2_rq2_2, robust = c("HC1", "HC1"), 
              model.names = c("Insight (HI Condition) S2", "Insight (LI Condition) S2"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 2: Insight as a function of finding the solution by oneself")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Problem Solved"= "factor(solved)1")
+               ) %>% set_caption("Study 2: Insight as a function of finding the solution by oneself")
 ```
 
 ```{r}
 export_summs(S3_rq2_1, S3_rq2_2, robust = c("HC1", "HC1"), 
              model.names = c("Insight (HI Condition) S3", "Insight (LI Condition) S3"), digits = 4,
-             statistics = (R2adj = "adj.r.squared")) %>% set_caption("Study 3: Insight as a function of finding the solution by oneself")
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Problem Solved" = "factor(solved)1" )) %>% set_caption("Study 3: Insight as a function of finding the solution by oneself")
 ```
 
 ```{r}
@@ -2079,7 +2148,28 @@ RQ2_MA %>%
   kable("latex", booktabs = TRUE, caption = "Meta-analysis of RQ2") %>%
   kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
 ```
-\FloatBarrier 
+\FloatBarrier
+
+**RQ3**: How does the the frequency of reading detective fiction influence the several outcomes?
+
+```{r}
+S5_rq3_1 = lm(scale(sharing) ~ scale(as.numeric(pre_test)), data_High5)
+S5_rq3_2 = lm(scale(sharing) ~ scale(as.numeric(pre_test)), data_Low5)
+S5_rq3_3 = glm(actual_consumption ~ scale(as.numeric(pre_test)),
+               family = binomial(link = "probit"), data_High5)
+S5_rq3_4 = glm(actual_consumption ~ scale(as.numeric(pre_test)),
+               family = binomial(link = "probit"), data_Low5)
+S5_rq3_5 = lm(scale(consume) ~ scale(as.numeric(pre_test)), data_High5)
+S5_rq3_6 = lm(scale(consume) ~ scale(as.numeric(pre_test)), data_Low5)
+
+```
+
+```{r}
+export_summs(S5_rq3_1, S5_rq3_2, S5_rq3_3, S5_rq3_4, S5_rq3_5, S5_rq3_6, robust = c("HC1", "HC1", "HC1", "HC1", "HC1", "HC1"), 
+             model.names = c("Sharing (HI)", "Sharing (LI)", "Actual Consumption (HI)", "Actual Consumption (LI)", "Consume (HI)", "Consume (LI)"), digits = 4,
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")) %>% set_caption("Study 5: Outcomes as a function of the frequency of reading detective fiction for High (HI) and Low Insight Stimuli (LI)")
+```
 
 # 5. Materials for whodunits studies
 

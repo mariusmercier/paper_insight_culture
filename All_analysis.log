@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.11.11)  30 NOV 2023 16:04
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.11.11)  12 MAR 2024 17:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -967,21 +967,21 @@ LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[43] [44] [45] [46] [47] (./All_analysis.aux)
+[43] [44] [45] [46] [47] [48] (./All_analysis.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-01>
  ***********
 Package rerunfilecheck Info: File `All_analysis.out' has not changed.
-(rerunfilecheck)             Checksum: B9113CCD32CBE9718D72E61D39C1559B;1973.
+(rerunfilecheck)             Checksum: 5A7987A2A9AEEB3B132916BC96447DFD;1973.
  ) 
 Here is how much of TeX's memory you used:
- 24082 strings out of 476934
- 476558 string characters out of 5805171
+ 24083 strings out of 476934
+ 476580 string characters out of 5805171
  2002164 words of memory out of 5000000
- 45620 multiletter control sequences out of 15000+600000
+ 45621 multiletter control sequences out of 15000+600000
  564602 words of font info for 87 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 90i,13n,120p,520b,907s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,13n,120p,571b,907s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on All_analysis.pdf (47 pages).
+Output written on All_analysis.pdf (48 pages).
