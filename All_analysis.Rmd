@@ -31,9 +31,167 @@ library(huxtable)
 ```
 
 \newpage
-The Electronic Supplementary Material include more information on the Ethnographical Review (section 1), provide pre-registered analysis not presented in the paper for concision (section 2), and provide all the regression table of the analysis presented in the paper both with and without controls (section 3). We also include more information on exploratory analysis presented in the discussion (section 4). Materials not presented in the paper are available in section 5. This pdf file is generated using the RMarkdown file "All_analysis.Rmd". All scripts used for the data processing, the statistical analysis and for creating the figure can be found following this link: https://osf.io/7qwt2/files/github?view_only=79e6023bddfc440d9e785d7db518b977. Simply download the folder and run the Rmd file. Pre-registrations are available at this link: https://osf.io/7qwt2/?view_only=79e6023bddfc440d9e785d7db518b977.
 
-# 1. Ethnographic Review
+The Electronic Supplementary Material include the materials used (section 1), information on the Ethnographical Review (section 2), provide pre-registered analysis not presented in the paper for concision (section 3), and provide all the regression table of the analysis presented in the paper both with and without controls (section 4). We also include exploratory analyses (section 5). This pdf file is generated using the RMarkdown file "All_analysis.Rmd". All scripts used for the data processing, the statistical analysis and for creating the figure can be found following this link: <https://osf.io/7qwt2/files/github?view_only=79e6023bddfc440d9e785d7db518b977>. Simply download the folder and run the Rmd file. Pre-registrations are available at this link: <https://osf.io/7qwt2/?view_only=79e6023bddfc440d9e785d7db518b977>.
+
+# 1. Materials
+
+Here, we present the pre-registered materials used.
+
+## Insight Instruction
+
+We explained the concept of insight or "Aha experience" to the participants using this pre-tested wording:
+
+*"We will present you with a series of brain teasers. For each, we would like to know whether you experienced a feeling of insight when you solve each task: A feeling of insight is a kind of"Aha!" characterized by suddenness and obviousness (and often relief!)---like a revelation. By contrast, you experienced no Aha! if the solution occurs to you slowly and stepwise. As an example, imagine a lightbulb that is switched on all at once in contrast to slowly dimming it up. We ask for your subjective rating whether it felt like an Aha! experience or not, there is no right or wrong answer. Just follow your intuition."*
+
+## Questions asked
+
+Participants were asked two questions to be answered on a scale from 1 to 7. First, to what extent they had experienced a feeling of insight: *"To what extent did you experience a feeling of"Aha!", as explained earlier, when you either found, or were given the correct answer?"*
+
+Then, how likely they were to share the problem with another person: *"How likely would you be to share this brain teaser with other people?"*
+
+Finally, participants were given the choice to see one more problem, similar to the ones they had seen, or to finish the experiment. We specified that they would be paid at the posted rate whether they decided to see a new problem or not: *"Thank you for your participation. We have more brain teasers to show you if you are interested! Would you like to see a new brain teaser?  You will be paid at the posted rate whether you decide to see a new one or not. [Yes / No (end the survey)]"*
+
+In study 4 and 5, we also asked participants how convincing they found the explanation on a 7 point scale: *“How convincing do you find this explanation?”*
+
+## Materials for Study 1, 2 and 3
+
+**High Insight Condition**
+
+**01.** A man married 20 women in the town. He and the women are still alive, and  he has had no divorces. He is not a bigamist and is not a Mormon and yet he broke no law. How is that possible? **Answer:** The man is a priest.
+
+**02.** Denise is a pretty good tennis player. She made a bet that she could hit a regular tennis ball, send it flying off in the air, and after a bit, it would turn around 180 degrees and fly right back to her -- without making contact with any other object on its way. She won the bet. Explain how in a few sensible words. **Answer:** Denise shot the ball up in the air in a vertical line.
+
+\
+**03.** While walking on the newly paved black asphalt road to her home, Jen accidentally  dropped her small black leather clutch. The lights on the new road had not been turned on yet, the moon was not out, and Jen did not have on her a  flashlight, matches, mobile phone, or any other means of lighting. Explain briefly how Jen nonetheless saw her clutch immediately. **Answer:** It was daylight.
+
+**Low Insight Condition (Study 1)**
+
+**04.** Given a source of unlimited water and four containers of different capacities (99, 14, 25 and 11 L) obtain exactly 86 L of water. (L is the symbol for the Liter, a metric unit of volume equal to 0.26 gallons.) **Answer:**  There are several answers. The easiest way is to pour the 25L containers into the 99L containers three times (75L), then add 11L with the corresponding containers.
+
+**05.** Three cards from an ordinary deck are lying on a table, face down. The following information is known about those three cards: 
+
+To the left of a queen there is a jack 
+
+To the left of a spade there is a diamond 
+
+To the right of a heart there is a king 
+
+To the right of a king there is a spade
+
+Can you assign the proper suit to each picture card? **Answer:** The left card is a jack of heart, the middle card is a King of diamond, the right card is a queen of spades.
+
+**06.** In a (knock-out) tennis tournament there are 32 players. How many matches are there in the tournament? **Answer:** 31 matches.
+
+**Low Insight Condition (Study 2 and 3)**
+
+**07.** A man in town married 20 women in the town. He and the women are still alive, and he has had no divorces. How is that possible? **Answer**: The man is a polygamist or a priest.
+
+**08.** Denise is a pretty good tennis player. She made a bet that she could hit a regular tennis ball, send it flying off in the air, and after a bit, it would turn around 180 degrees and fly right back to her.She won the bet. Explain how in a few sensible words. **Answer**: Denise shot the ball against a wall or other solid objects. Or, she may have shot the ball up in the air in a vertical line.
+
+**09.** While walking on the newly paved black asphalt road to her home during the night, Jen accidentally dropped her small black leather clutch. Explain briefly how Jen saw her clutch immediately. **Answer:** She saw her clutch thanks to the moonlight or some other source of light.
+
+## Materials for Study 4 and 5
+
+### Cocktail
+
+It's the beginning of a very hot summer, and Claire has just broken up with her boyfriend. They had been together for a very long time, and he took it really hard, becoming nearly abusive. To find a distraction, Claire invited Juliana, her best friend, to go out for drinks together. Juliana insisted on going to the blue lagoon, because they serve delicious, ice cold cocktails here.
+
+At the blue lagoon, they ordered one large drink to be shared between the two of them. The waiter brought up a small pitcher, put two straws in, and served it to the women. Juliana, as usual, finished her half of the drink very quickly. Claire, by contrast, nearly always sips her drink slowly, and this time was no exception, it was a good half hour later that she had finished the rest of the pitcher.
+
+Shortly after she\'d finished the drink, Claire started complaining of stomach pain. Julianna called an ambulance. Claire died one hour after arriving at the hospital, where the doctors said that she had been poisoned. Juliana also felt slightly sick, but nothing serious happened to her.
+
+After the waiter had brought the drink to their table, no one had gone anywhere near them. On that evening, the bartender was the only one who had access to the drink preparation area, while the waiter was the only one to have access to the drinks after they had been prepared. Both the bartender and the waiter are natural suspects since they were both friends with Claire\'s ex-boyfriend, who was known to be very jealous and vindictive.
+
+For the first couple of days, the police can\'t figure out what happened. A few days later, new information has come to light, and you read in a newspaper a journalist writing:
+
+**High-insight resolution:**
+
+\"Both the bartender and the waiter might have conspired with the ex-boyfriend to poison Claire. The poison is unlikely to have been in one of the straws, since they could not have known which straw Claire would use. However, Claire\'s ex-boyfriend knew that she typically slowly sips her drink, while her friend Juliana drinks very quickly. As a result, a way of poisoning Claire and not Juliana was to put poison in the ice, which would be slowly released in the water. This way, only Claire would be poisoned, and not Juliana. Since the bartender is the one who put the ice in the pitcher, it must be him who poisoned Claire.\"
+
+**Low-insight resolution:**
+
+\"The police found deleted text messages between the bartender and Claire\'s ex-boyfriend, in which they plotted her poisoning. Questioning relatives of the bartender and of Claire\'s ex-boyfriend confirmed that they were planning something against Claire. On several occasions, they talked about \"taking care\" by \"any means\" of Claire. The police profilers also established that Claire's ex-boyfriend was a manipulative person. The bartender is known by police services for previous cases of violence and harassment. Confronted with this evidence, the bartender confessed. It must be him who poisoned Claire.\"
+
+### Chocolate
+
+Sir William, a wealthy middle-aged man in the midst of a bitter divorce, receives at his club a box of chocolates, delivered by an anonymous courier. He has no idea where the chocolates came from, and is all the more surprised that he really doesn't like chocolate. As he looks for someone to give the chocolates to, he turns to his chubby friend at the club, Mr. Beresford. Sir William tells him:
+
+You mentioned that you were looking for a small gift for your wife, so I'd happily give you those, are you interested?
+
+Mr. Beresford replies:
+
+if you'd asked me that last week, I would have said, absolutely not, as my wife was until then on a strict no sugar diet. Fortunately, she's done with that, and we can enjoy delicacies together again. So if you absolutely don't want the chocolate box, I'd happily take it off you!
+
+As a result, Sir Williams gives Mr. Beresford the chocolate box.
+
+Mr. Beresford goes home and, after dinner, he gives his wife the chocolates, and they enjoy a few together while watching a movie. During the night, they both feel sick, and Mr. Beresford manages to call an ambulance. Tragically, Mrs. Beresford dies on the way to the hospital, while Mr. Beresford is severely sick but survives after days of treatment.
+
+The police establish that the death of Mrs. Beresford, and the sickness of her husband, is due to the chocolates, which had been poisoned with nitrobenzene. Given the average dose of nitrobenzene in a chocolate, six chocolates would have been enough to kill an adult. Mrs. Beresford ate a dozen chocolates, while her husband ate only two, which saved his life. Police traced the chocolates back to the small, luxury Maison Fauchon chocolate company that made them. It turns out that Sir William's box of chocolates was part of a special request from an unknown customer. The delivery man from the Maison Fauchon remembered the order, because he had been specifically instructed to leave the chocolate box in a park bench, which he thought was weird, given that these are expensive chocolates.
+
+The police weren't able to prove anyone's guilt at first, when Mr. Beresford started making some strong accusations. He said that after his wife's death, he found proof that she had been having a passionate affair with Sir William. Looking at the evidence, the police confirmed that this was the case, and they also found, in secret texts that no one had access to, that she had put a stop to the affair two weeks before her death, and that she and Sir William had had no contact since. Mr. Beresford then accused Sir Willam of poisoning his wife, so the affair wouldn't come out, as the latter would then be sure to lose most of his fortune in the divorce proceedings. According to Mr. Beresford, Sir William ordered the chocolates, poisoned them, and then paid a henchman to deliver them to the club. He then found an excuse to give them to someone else, making it look like he was the intended victim.
+
+In spite of these accusations, the police end up arresting Mr. Beresford. Here's the reasoning of the detective behind the arrest:
+
+**High Insight:**
+
+"Mr. Beresford was already aware of the affair, and he thought of a plan to get rid of both his wife and her lover, while making it very unlikely he would be suspected. He ordered the chocolates, poisoned them, and paid a henchman to deliver them to the club. Knowing that Sir William doesn't like chocolate, he mentioned that he had to find a small gift for his wife, making it natural for Sir William to offer him the chocolates. He was then careful to only eat a few chocolates--even though he would usually have eaten most of the box. If his plan worked well, his wife would die, and Sir William would go to jail for a long time.
+
+Even though both Mr. Beresford and Sir William had a motive, we can tell that Mr. Beresford is the culprit because he was the only one to know that his wife had stopped her diet, and so would eat the chocolates. Since Mrs. Beresford had put an end to this diet a week after she put an end to the affair with Sir William, and they had had no contact since, there was no way for him to know, and thus he would never have planned to poison her with chocolates.
+
+Therefore, Mr. Beresford is the one who killed his wife."
+
+**Low insight:**
+
+"Sir William had to go on an unexpected business trip abroad, and he had just come back on the day of the death. They also found no way for him to have communicated with someone who could have acted for him. That means that he had no opportunity to get the chocolates and poison them.
+
+As we interrogated Mr. Beresford, we found that his behavior during the questioning was suspicious. As a result, we pushed him harder, trying to catch him being inconsistent. After several hours of questioning, he ended up admitting that he was the culprit. He ordered the chocolates to kill his unfaithful wife and have her lover accused and sent to jail. He also told us where to find in his house the bill for the chocolates. We also discovered that Mr. Beresford had accumulated a lot of debt and that his wife's life insurance allowed him to pay it off.
+
+Therefore, Mr. Beresford is the one who killed his wife."
+
+### Nightmare
+
+The old billionaire Edward Conway has invited the famous detective Richard Burton to his home. Mr. Conway lives in an isolated mansion. When he arrives, Burton sees three workers moving rubble in front of the house. On the steps, the butler, Murray, opens the door and explains that the house is being renovated. He apologizes for the inconvenience, and Burton shows him the invitation he received from Mr. Conway.
+
+Murray informs Burton that it is standard procedure to introduce visitors first to the office of the secretary who notifies Mr. Conway of their visit, and he brings Burton to the secretary's office. Burton knocks on the door and an authoritative voice tells him to enter. Once inside, a tall, austere, bespectacled man greets the detective, coldly. It is not the secretary who is there, but Mr. Conway. He explains to Burton that he is using his secretary's office because there is currently work going on in his own office, and asks him to sit. Burton does so, facing a large window, where a strong sun is setting.
+
+For several weeks he has been having the same dream, Mr. Conway says. In this nightmare, he is killing himself in front of his office window with the gun he keeps in his drawer. Not being suicidal, Mr. Conway asks Burton if he has ever encountered cases of murder by suggestion. Mr. Conway wonders if someone could use hypnosis to drive him to suicide by making him dream of ending his life, although he does not remember being hypnotized. He mentions a number of business rivals whom he ruined, and who might want to seek revenge in this perverted manner.
+
+Burton is taken aback because he has never encountered such a case and admits that he's not sure whether he can help Mr. Conway. Mr. Conway then dismisses the detective, and asks him to give back the invitation, as he wants to keep this meeting discreet. However, once Burton is in the hallway, he realizes that he has actually given another letter, addressed to a colleague. Therefore, he goes back to the office, gives the right letter to Mr. Conway, apologizes and goes home.
+
+A week later, Mr. Conway is found dead by apparent suicide. On the same day, the police called Burton to the scene because his letter of invitation had been found on Mr. Conway's table. Once he gets there, he notices that the work is finished, and that the workers have done a good job cleaning up, except for a few pieces of glass on the landing of the house that his experienced eye can't help but notice. Mr. Conway used to water the plants on his windowsill at 1 p.m. sharp every day, and the plants had been watered. Therefore, Mr. Conway's time of death is most likely after 1 p.m. In the house, in addition to the police, are Mr. Conway's widow, and his daughter from a previous marriage, as well as the butler Murray, the cleaning lady Miss Hurtigan and his secretary Mr. Fisher.
+
+Burton first tells the police the contents of his conversation with Mr. Conway. Mr. Conway's widow confirms that her husband had been preoccupied in recent weeks by recurring dreams of suicide. The detective is then introduced to Mr. Conway's office, which is next to his secretary's, entering through a large carved door. Mr. Conway's body is lying in front of his open window, holding a revolver in his hand, dead from a bullet to the head. The body was discovered by Mr. Fisher, who had come to bring him a briefcase of documents, followed a few seconds later by Murray, who was alerted by Mr. Fisher's cry. The body is not wearing glasses, which is strange because Mr. Conway, being extremely short-sighted, rarely took off his glasses. This absence of glasses is all the more puzzling because Mr. Conway had a spare pair in case he lost the first one.
+
+None of the workers heard the shot, which is probably due to them wearing noise-canceling headphones, the noise of the work, and the heavy door of Mr. Conway office. Despite the back and forth of the workers in front of Conway's office, no one saw anyone enter Mr. Conway's office--except Mr. Conway himself earlier in the morning. For most of the day of the shooting, Betsy Conway and Miss. Conway said they were either in another aisle, as the work near Mr. Conway's office was quite noisy. Mr. Conway has kept working there, thanks to the heavy insulation of his office. Fisher, Murray and Hurtigan, to be able to keep working, had borrowed noise-canceling headphones from the workers and continued their tasks as usual. As a result, no one seems to have heard the gunshot.
+
+Mr. Conway's daughter and widow each inherit half of the deceased's considerable fortune. They do not seem particularly distraught, possibly because Mr. Conway was notorious for his bad temper.
+
+A few days later, Burton contacted the police and told them the following:
+
+**High Insight**
+
+"The individual I met a week ago was not Mr. Conway, but his secretary Mr. Fisher, disguised and wearing makeup. It couldn't have been Murray, since he was the one who brought me into the office. Moreover, who else could have used Mr. Fisher's office, knowing that he works there every day. I could not notice the deception because I was partially blinded by the light of the setting sun.
+
+Mr. Fisher dressed up as Edward Conway, welcomed me into the secretary's office, knowing that the real Mr. Conway would probably be in his own office. Mr. Conway could not hear our conversation because his office is so well insulated. Moreover, Mr. Fisher, having put on Mr. Conway's second pair of glasses, which were unsuitable for his eyesight, did not realize that I had handed him the wrong letter at the end of our interview.
+
+Speaking of this letter, Mr. Fisher has asked me to give it to him before I left, so that the police would find it in Mr. Conway's belongings, interview me, and I would tell this made up story of premonitory dreams, confirming the apparent suicide. The real Mr. Conway would not have kept the letter on his desk for a week, he would have destroyed the letter so that people would not know about our appointment. Mr. Fisher then shot Mr. Conway from his office window, as Mr. Conway was watering the plants.
+
+Mr. Conway's glasses fell outside on the landing of the house and shattered there. Later in the day, Mr. Fisher retrieved the frames, but did not diligently clean up the broken glass. Before Murray arrived, Mr. Fisher put the gun hidden in his briefcase into Mr. Conway's hands. I suspect that Mr. Fisher set it up with the help of Mrs. Conway, the only one to have heard of this whimsical story of dreams. Unable to disguise herself as Mr. Conway to deceive me, Mrs. Conway had to offer Mr. Fisher part of the inheritance in exchange for his help in killing her husband.
+
+Therefore, I accuse Harry Fisher and Betsy Conway of killing Mr. Conway."
+
+**Low Insight**
+
+"I have scrupulously checked the alibi of each of the protagonists. On the day of the murder Murray was working in the basement, he could not tell us at first, but he was accompanied but Miss Hurtigan. The two have a secret relationship that could have gotten them fired if the Conway family found out, since such relationships are prohibited in their employment contracts. Faced with my pressing questions, they finally confessed the truth.
+
+With the help of my partners, I tailed the three remaining suspects for several days. I noticed several meetings between Mr. Fisher and Betsy Conway, the widow. I was even able to take pictures of the two of them kissing furtively at a coffee shop. Not only that, but I also spoke with relatives of Mr. Fisher, who testified that he had told them to be that "he was about to hit it big" and that "his life wouldn't be the same". Furthermore, I was subsequently contacted by Miss Conway, the daughter of the deceased, who gave me audio recordings she had made of Mr. Fisher and Mrs. Conway explicitly planning the murder of Mr. Conway.
+
+The forensic analysis did not find any gunshot residue on Mr. Conway's temple consistent, which is inconsistent with a suicide. Finally, the scientific department thought of gathering the fingerprints on the revolver found at the crime scene, but not on the bullets loaded into it. I therefore suggested to the detectives that they also gather fingerprints on the bullets. It turns out that Mr. Fisher had wiped his fingerprints off the revolver, but had forgotten to do the same with the bullets he put in the cylinder.
+
+Therefore, I accuse Mr. Fisher and Betsy Conway of killing Mr. Conway."
+
+# 2. Ethnographic Review
 
 Nowadays, riddles have lost their once prominent place in the playground to other more attractive cultural products. Nevertheless, we still have the trace of what the children's folklore looked like in the 1960s thanks to the work of the Opie couple. As it is possible that Opie & Opie has put forward an idiosyncratic cultural practice, we conducted a search in the Human Relations Area Files anthropological database (eHRAF: World Cultures database) to see if there were any traces of riddles outside of the Anglo-Saxon culture. We searched for the words "riddle", "enigma", "puzzle" and "conundrum" in July 2022. Unfortunately, it is common for researchers to refer to something they do not understand as a riddle, a puzzle or an enigma which makes it difficult to detect ethnographic reports on these cultural practices. Therefore, we restricted our search to the paragraphs already coded in the "Game" category. This research allowed us to identify 43 cultures where the practice of riddles is common.
 
@@ -53,7 +211,7 @@ hraf_d[, 1:5] %>%
 
 ```
 
-# 2. Pre-registered analysis not presented
+# 3. Pre-registered analysis not presented
 
 As pre-registered, we conducted a within participants analysis at the level of the problem to test the following hypothesis.
 
@@ -612,7 +770,7 @@ export_summs(S3_h33_1, S3_h33_2, robust = c("HC1", "HC1"),
 
 \FloatBarrier
 
-# 3. Main Analysis
+# 4. Main Analysis
 
 We now turn to the regression tables of all hypothesis. The code to computationally replicate all analysis (including descriptive statistics) can be found in the Rmd file. Additional descriptive statistics can be found in the code such as the mean insight, sharing, RT for each problem.
 
@@ -755,7 +913,6 @@ export_summs(S1_h12_1, S1_h12_2, S1_h12_3, robust = c("HC1", "HC1", "HC1"),
 ```
 
 \FloatBarrier
-
 
 ### H2.1
 
@@ -1776,7 +1933,7 @@ export_summs(S5_h31_1, S5_h31_2, robust = c("HC1", "HC1"),
              ) %>% set_caption("Study 5: Willingness to consume as a function of condition, with and without controls")
 ```
 
-\FloatBarrier 
+\FloatBarrier
 
 ### H3.2
 
@@ -2028,7 +2185,7 @@ MA_whodunits %>%
   kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
 ```
 
-# 4. Exploratory Analysis
+# 5. Exploratory Analysis
 
 **RQ1**: Is the declarative measure of consumption ("willingness to consume") a predictor of the behavioral measure of consumption ("Actual Consumption") ?
 
@@ -2046,18 +2203,32 @@ export_summs(S3_rq1, S5_rq1, robust = c("HC1", "HC1"),
              coefs = c("Intercept" = "(Intercept)", "Mean Consumption" = "scale(consume_mean)","Consumption" = "scale(consume)")
                ) %>% set_caption("Actual Consumption as a function of willingness to consume")
 ```
+
 \FloatBarrier
+
 **RQ2**: Does finding the solution by oneself has an influence on the intensity of insight?
 
 ```{r echo = TRUE}
-S1_rq2_1 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_High1)
-S1_rq2_2 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_Low1)
+S1_rq2_1 = lmer(scale(insight) ~ factor(solved) 
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_High1)
+S1_rq2_2 = lmer(scale(insight) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_Low1)
 
-S2_rq2_1 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_High2)
-S2_rq2_2 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_Low2)
+S2_rq2_1 = lmer(scale(insight) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_High2)
+S2_rq2_2 = lmer(scale(insight) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_Low2)
 
-S3_rq2_1 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_High3)
-S3_rq2_2 = lmer(scale(insight) ~ factor(solved) + (1| stumpers) + (1 + factor(solved) | ResponseId), data = data_Low3)
+S3_rq2_1 = lmer(scale(insight) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_High3)
+S3_rq2_2 = lmer(scale(insight) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_Low3)
 ```
 
 ```{r}
@@ -2148,105 +2319,172 @@ RQ2_MA %>%
   kable("latex", booktabs = TRUE, caption = "Meta-analysis of RQ2") %>%
   kable_styling(latex_options = c("striped", "hold_position", "scale_down"))
 ```
+
 \FloatBarrier
 
 **RQ3**: How does the the frequency of reading detective fiction influence the several outcomes?
 
-```{r}
+```{r, echo=TRUE}
 S5_rq3_1 = lm(scale(sharing) ~ scale(as.numeric(pre_test)), data_High5)
 S5_rq3_2 = lm(scale(sharing) ~ scale(as.numeric(pre_test)), data_Low5)
+
 S5_rq3_3 = glm(actual_consumption ~ scale(as.numeric(pre_test)),
                family = binomial(link = "probit"), data_High5)
 S5_rq3_4 = glm(actual_consumption ~ scale(as.numeric(pre_test)),
                family = binomial(link = "probit"), data_Low5)
+
 S5_rq3_5 = lm(scale(consume) ~ scale(as.numeric(pre_test)), data_High5)
 S5_rq3_6 = lm(scale(consume) ~ scale(as.numeric(pre_test)), data_Low5)
-
 ```
 
 ```{r}
-export_summs(S5_rq3_1, S5_rq3_2, S5_rq3_3, S5_rq3_4, S5_rq3_5, S5_rq3_6, robust = c("HC1", "HC1", "HC1", "HC1", "HC1", "HC1"), 
-             model.names = c("Sharing (HI)", "Sharing (LI)", "Actual Consumption (HI)", "Actual Consumption (LI)", "Consume (HI)", "Consume (LI)"), digits = 4,
+export_summs(S5_rq3_1, S5_rq3_3, S5_rq3_5, robust = c("HC1", "HC1", "HC1"), 
+             model.names = c("Willingness to Share", "Actual Consumption", "Willingness to Consume"), digits = 4,
              statistics = (R2adj = "adj.r.squared"),
-             coefs = c("Intercept" = "(Intercept)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")) %>% set_caption("Study 5: Outcomes as a function of the frequency of reading detective fiction for High (HI) and Low Insight Stimuli (LI)")
+             coefs = c("Intercept" = "(Intercept)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")) %>% set_caption("Study 5: Outcomes as a function of the frequency of reading detective fiction \n within the High Insight condition")
 ```
 
-# 5. Materials for whodunits studies
+\FloatBarrier
 
-## 5.1 - Chocolate
+```{r}
+export_summs(S5_rq3_2, S5_rq3_4, S5_rq3_6, robust = c("HC1", "HC1", "HC1"), 
+             model.names = c("Willingness to Share", "Actual Consumption", "Willingness to Consume"), digits = 4,
+             statistics = (R2adj = "adj.r.squared"),
+             coefs = c("Intercept" = "(Intercept)", "Usually Read Detective Fiction" = "scale(as.numeric(pre_test))")) %>% set_caption("Study 5: Outcomes as a function of the frequency of reading detective fiction \n within the Low Insight condition")
+```
 
-Sir William, a wealthy middle-aged man in the midst of a bitter divorce, receives at his club a box of chocolates, delivered by an anonymous courier. He has no idea where the chocolates came from, and is all the more surprised that he really doesn't like chocolate. As he looks for someone to give the chocolates to, he turns to his chubby friend at the club, Mr. Beresford. Sir William tells him:
+\FloatBarrier
 
-You mentioned that you were looking for a small gift for your wife, so I'd happily give you those, are you interested?
+```{r Exploratory analysis, include = FALSE}
 
-Mr. Beresford replies:
+# Additional exploratory an
 
-if you'd asked me that last week, I would have said, absolutely not, as my wife was until then on a strict no sugar diet. Fortunately, she's done with that, and we can enjoy delicacies together again. So if you absolutely don't want the chocolate box, I'd happily take it off you!
+mean_cor_S1_High = data_1 %>%
+  select(contains("insight")) %>%
+  sapply(as.numeric) %>%
+  .[,1:3] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+# 0.305
 
-As a result, Sir Williams gives Mr. Beresford the chocolate box.
+mean_cor_S1_Low = data_1 %>%
+  select(contains("insight")) %>%
+  sapply(as.numeric) %>%
+  .[,4:6] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+# 0.345
 
-Mr. Beresford goes home and, after dinner, he gives his wife the chocolates, and they enjoy a few together while watching a movie. During the night, they both feel sick, and Mr. Beresford manages to call an ambulance. Tragically, Mrs. Beresford dies on the way to the hospital, while Mr. Beresford is severely sick but survives after days of treatment.
+mean_cor_sharing_S1_High = data_1 %>%
+  select(contains("sharing")) %>%
+  sapply(as.numeric) %>%
+  .[,1:3] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+# 0.58
 
-The police establish that the death of Mrs. Beresford, and the sickness of her husband, is due to the chocolates, which had been poisoned with nitrobenzene. Given the average dose of nitrobenzene in a chocolate, six chocolates would have been enough to kill an adult. Mrs. Beresford ate a dozen chocolates, while her husband ate only two, which saved his life. Police traced the chocolates back to the small, luxury Maison Fauchon chocolate company that made them. It turns out that Sir William's box of chocolates was part of a special request from an unknown customer. The delivery man from the Maison Fauchon remembered the order, because he had been specifically instructed to leave the chocolate box in a park bench, which he thought was weird, given that these are expensive chocolates.
+mean_cor_sharing_S1_Low = data_1 %>%
+  select(contains("sharing")) %>%
+  sapply(as.numeric) %>%
+  .[,4:6] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+#0.5
 
-The police weren't able to prove anyone's guilt at first, when Mr. Beresford started making some strong accusations. He said that after his wife's death, he found proof that she had been having a passionate affair with Sir William. Looking at the evidence, the police confirmed that this was the case, and they also found, in secret texts that no one had access to, that she had put a stop to the affair two weeks before her death, and that she and Sir William had had no contact since. Mr. Beresford then accused Sir Willam of poisoning his wife, so the affair wouldn't come out, as the latter would then be sure to lose most of his fortune in the divorce proceedings. According to Mr. Beresford, Sir William ordered the chocolates, poisoned them, and then paid a henchman to deliver them to the club. He then found an excuse to give them to someone else, making it look like he was the intended victim.
 
-In spite of these accusations, the police end up arresting Mr. Beresford. Here's the reasoning of the detective behind the arrest:
+mean_cor_S2_High = data_2 %>%
+  select(contains("insight")) %>%
+  sapply(as.numeric) %>%
+  .[,1:3] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+#0.31
 
-**Insight:**
+mean_cor_S2_Low = data_2 %>%
+  select(contains("insight")) %>%
+  sapply(as.numeric) %>%
+  .[,4:6] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+#0.55
 
-"Mr. Beresford was already aware of the affair, and he thought of a plan to get rid of both his wife and her lover, while making it very unlikely he would be suspected. He ordered the chocolates, poisoned them, and paid a henchman to deliver them to the club. Knowing that Sir William doesn't like chocolate, he mentioned that he had to find a small gift for his wife, making it natural for Sir William to offer him the chocolates. He was then careful to only eat a few chocolates--even though he would usually have eaten most of the box. If his plan worked well, his wife would die, and Sir William would go to jail for a long time.
+mean_cor_sharing_S2_High = data_2 %>%
+  select(contains("sharing")) %>%
+  sapply(as.numeric) %>%
+  .[,1:3] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+#0.63
 
-Even though both Mr. Beresford and Sir William had a motive, we can tell that Mr. Beresford is the culprit because he was the only one to know that his wife had stopped her diet, and so would eat the chocolates. Since Mrs. Beresford had put an end to this diet a week after she put an end to the affair with Sir William, and they had had no contact since, there was no way for him to know, and thus he would never have planned to poison her with chocolates.
+mean_cor_sharing_S2_Low = data_2 %>%
+  select(contains("sharing")) %>%
+  sapply(as.numeric) %>%
+  .[,4:6] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+#0.75
 
-Therefore, Mr. Beresford is the one who killed his wife."
+mean_cor_S3_High = data_3 %>%
+  select(contains("insight")) %>%
+  sapply(as.numeric) %>%
+  .[,1:3] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+#0.6
 
-**No insight:**
+mean_cor_S3_Low = data_3 %>%
+  select(contains("insight")) %>%
+  sapply(as.numeric) %>%
+  .[,4:6] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+#0.65
 
-"Sir William had to go on an unexpected business trip abroad, and he had just come back on the day of the death. They also found no way for him to have communicated with someone who could have acted for him. That means that he had no opportunity to get the chocolates and poison them.
+mean_cor_sharing_S3_High = data_3 %>%
+  select(contains("sharing")) %>%
+  sapply(as.numeric) %>%
+  .[,1:3] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+#0.65
 
-As we interrogated Mr. Beresford, we found that his behavior during the questioning was suspicious. As a result, we pushed him harder, trying to catch him being inconsistent. After several hours of questioning, he ended up admitting that he was the culprit. He ordered the chocolates to kill his unfaithful wife and have her lover accused and sent to jail. He also told us where to find in his house the bill for the chocolates. We also discovered that Mr. Beresford had accumulated a lot of debt and that his wife's life insurance allowed him to pay it off.
+mean_cor_sharing_S3_Low = data_3 %>%
+  select(contains("sharing")) %>%
+  sapply(as.numeric) %>%
+  .[,4:6] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+# 0.73
 
-Therefore, Mr. Beresford is the one who killed his wife."
+mean_cor_consume_S3_High = data_3 %>%
+  select(contains("consume")) %>%
+  sapply(as.numeric) %>%
+  .[,1:3] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+# 0.65
 
-## 5.2 - Nightmare
+mean_cor_consume_S3_Low = data_3 %>%
+  select(contains("consume")) %>%
+  sapply(as.numeric) %>%
+  .[,4:6] %>% 
+  cor(method = "pearson", use = "pairwise.complete.obs") %>% 
+  .[lower.tri(., diag = FALSE)] %>% 
+  mean(na.rm = TRUE)
+# 0.77
+```
 
-The old billionaire Edward Conway has invited the famous detective Richard Burton to his home. Mr. Conway lives in an isolated mansion. When he arrives, Burton sees three workers moving rubble in front of the house. On the steps, the butler, Murray, opens the door and explains that the house is being renovated. He apologizes for the inconvenience, and Burton shows him the invitation he received from Mr. Conway.
 
-Murray informs Burton that it is standard procedure to introduce visitors first to the office of the secretary who notifies Mr. Conway of their visit, and he brings Burton to the secretary's office. Burton knocks on the door and an authoritative voice tells him to enter. Once inside, a tall, austere, bespectacled man greets the detective, coldly. It is not the secretary who is there, but Mr. Conway. He explains to Burton that he is using his secretary's office because there is currently work going on in his own office, and asks him to sit. Burton does so, facing a large window, where a strong sun is setting.
-
-For several weeks he has been having the same dream, Mr. Conway says. In this nightmare, he is killing himself in front of his office window with the gun he keeps in his drawer. Not being suicidal, Mr. Conway asks Burton if he has ever encountered cases of murder by suggestion. Mr. Conway wonders if someone could use hypnosis to drive him to suicide by making him dream of ending his life, although he does not remember being hypnotized. He mentions a number of business rivals whom he ruined, and who might want to seek revenge in this perverted manner.
-
-Burton is taken aback because he has never encountered such a case and admits that he's not sure whether he can help Mr. Conway. Mr. Conway then dismisses the detective, and asks him to give back the invitation, as he wants to keep this meeting discreet. However, once Burton is in the hallway, he realizes that he has actually given another letter, addressed to a colleague. Therefore, he goes back to the office, gives the right letter to Mr. Conway, apologizes and goes home.
-
-A week later, Mr. Conway is found dead by apparent suicide. On the same day, the police called Burton to the scene because his letter of invitation had been found on Mr. Conway's table. Once he gets there, he notices that the work is finished, and that the workers have done a good job cleaning up, except for a few pieces of glass on the landing of the house that his experienced eye can't help but notice. Mr. Conway used to water the plants on his windowsill at 1 p.m. sharp every day, and the plants had been watered. Therefore, Mr. Conway's time of death is most likely after 1 p.m. In the house, in addition to the police, are Mr. Conway's widow, and his daughter from a previous marriage, as well as the butler Murray, the cleaning lady Miss Hurtigan and his secretary Mr. Fisher.
-
-Burton first tells the police the contents of his conversation with Mr. Conway. Mr. Conway's widow confirms that her husband had been preoccupied in recent weeks by recurring dreams of suicide. The detective is then introduced to Mr. Conway's office, which is next to his secretary's, entering through a large carved door. Mr. Conway's body is lying in front of his open window, holding a revolver in his hand, dead from a bullet to the head. The body was discovered by Mr. Fisher, who had come to bring him a briefcase of documents, followed a few seconds later by Murray, who was alerted by Mr. Fisher's cry. The body is not wearing glasses, which is strange because Mr. Conway, being extremely short-sighted, rarely took off his glasses. This absence of glasses is all the more puzzling because Mr. Conway had a spare pair in case he lost the first one.
-
-None of the workers heard the shot, which is probably due to them wearing noise-canceling headphones, the noise of the work, and the heavy door of Mr. Conway office. Despite the back and forth of the workers in front of Conway's office, no one saw anyone enter Mr. Conway's office--except Mr. Conway himself earlier in the morning. For most of the day of the shooting, Betsy Conway and Miss. Conway said they were either in another aisle, as the work near Mr. Conway's office was quite noisy. Mr. Conway has kept working there, thanks to the heavy insulation of his office. Fisher, Murray and Hurtigan, to be able to keep working, had borrowed noise-canceling headphones from the workers and continued their tasks as usual. As a result, no one seems to have heard the gunshot.
-
-Mr. Conway's daughter and widow each inherit half of the deceased's considerable fortune. They do not seem particularly distraught, possibly because Mr. Conway was notorious for his bad temper.
-
-A few days later, Burton contacted the police and told them the following:
-
-**High Insight**
-
-"The individual I met a week ago was not Mr. Conway, but his secretary Mr. Fisher, disguised and wearing makeup. It couldn't have been Murray, since he was the one who brought me into the office. Moreover, who else could have used Mr. Fisher's office, knowing that he works there every day. I could not notice the deception because I was partially blinded by the light of the setting sun.
-
-Mr. Fisher dressed up as Edward Conway, welcomed me into the secretary's office, knowing that the real Mr. Conway would probably be in his own office. Mr. Conway could not hear our conversation because his office is so well insulated. Moreover, Mr. Fisher, having put on Mr. Conway's second pair of glasses, which were unsuitable for his eyesight, did not realize that I had handed him the wrong letter at the end of our interview.
-
-Speaking of this letter, Mr. Fisher has asked me to give it to him before I left, so that the police would find it in Mr. Conway's belongings, interview me, and I would tell this made up story of premonitory dreams, confirming the apparent suicide. The real Mr. Conway would not have kept the letter on his desk for a week, he would have destroyed the letter so that people would not know about our appointment. Mr. Fisher then shot Mr. Conway from his office window, as Mr. Conway was watering the plants.
-
-Mr. Conway's glasses fell outside on the landing of the house and shattered there. Later in the day, Mr. Fisher retrieved the frames, but did not diligently clean up the broken glass. Before Murray arrived, Mr. Fisher put the gun hidden in his briefcase into Mr. Conway's hands. I suspect that Mr. Fisher set it up with the help of Mrs. Conway, the only one to have heard of this whimsical story of dreams. Unable to disguise herself as Mr. Conway to deceive me, Mrs. Conway had to offer Mr. Fisher part of the inheritance in exchange for his help in killing her husband.
-
-Therefore, I accuse Harry Fisher and Betsy Conway of killing Mr. Conway."
-
-**Low Insight**
-
-"I have scrupulously checked the alibi of each of the protagonists. On the day of the murder Murray was working in the basement, he could not tell us at first, but he was accompanied but Miss Hurtigan. The two have a secret relationship that could have gotten them fired if the Conway family found out, since such relationships are prohibited in their employment contracts. Faced with my pressing questions, they finally confessed the truth.
-
-With the help of my partners, I tailed the three remaining suspects for several days. I noticed several meetings between Mr. Fisher and Betsy Conway, the widow. I was even able to take pictures of the two of them kissing furtively at a coffee shop. Not only that, but I also spoke with relatives of Mr. Fisher, who testified that he had told them to be that "he was about to hit it big" and that "his life wouldn't be the same". Furthermore, I was subsequently contacted by Miss Conway, the daughter of the deceased, who gave me audio recordings she had made of Mr. Fisher and Mrs. Conway explicitly planning the murder of Mr. Conway.
-
-The forensic analysis did not find any gunshot residue on Mr. Conway's temple consistent, which is inconsistent with a suicide. Finally, the scientific department thought of gathering the fingerprints on the revolver found at the crime scene, but not on the bullets loaded into it. I therefore suggested to the detectives that they also gather fingerprints on the bullets. It turns out that Mr. Fisher had wiped his fingerprints off the revolver, but had forgotten to do the same with the bullets he put in the cylinder.
-
-Therefore, I accuse Mr. Fisher and Betsy Conway of killing Mr. Conway."
