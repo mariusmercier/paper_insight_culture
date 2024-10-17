@@ -2231,6 +2231,29 @@ S3_rq2_2 = lmer(scale(insight) ~ factor(solved)
                 data = data_Low3)
 ```
 
+```{r, include=FALSE}
+mean_insight_solved_1 = data_High1 %>% 
+  group_by(solved) %>% 
+  summarise(mean_insight = mean(insight), sd_insight = sd(insight))
+
+mean_insight_solved_2 = data_High2 %>%
+  group_by(solved) %>%
+  summarise(mean_insight = mean(insight), sd_insight = sd(insight))
+
+mean_insight_solved_3 = data_High3 %>%
+  group_by(solved) %>%
+  summarise(mean_insight = mean(insight), sd_insight = sd(insight))
+  
+overall_mean = mean_insight_solved_1 %>% 
+  bind_rows(mean_insight_solved_2) %>% 
+  bind_rows(mean_insight_solved_3) %>% 
+  group_by(solved) %>% 
+  summarise(mean_insight = mean(mean_insight), sd_insight = mean(sd_insight))
+
+rm(mean_insight_solved_1, mean_insight_solved_2, mean_insight_solved_3)
+```
+
+
 ```{r}
 export_summs(S1_rq2_1, S1_rq2_2, robust = c("HC1", "HC1"), 
              model.names = c("Insight (HI Condition) S1", "Insight (LI Condition) S1"), digits = 4,
@@ -2357,7 +2380,7 @@ export_summs(S5_rq3_2, S5_rq3_4, S5_rq3_6, robust = c("HC1", "HC1", "HC1"),
 
 ```{r Exploratory analysis, include = FALSE}
 
-# Additional exploratory an
+# Additional exploratory
 
 mean_cor_S1_High = data_1 %>%
   select(contains("insight")) %>%
@@ -2487,4 +2510,231 @@ mean_cor_consume_S3_Low = data_3 %>%
 # 0.77
 ```
 
+
+```{r, include=FALSE}
+#other explo analysis
+
+S1_rq4_1 = lmer(scale(sharing) ~ factor(solved) 
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_High1)
+S1_rq4_2 = lmer(scale(sharing) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_Low1)
+
+S2_rq4_1 = lmer(scale(sharing) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_High2)
+S2_rq4_2 = lmer(scale(sharing) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_Low2)
+
+S3_rq4_1 = lmer(scale(sharing) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_High3)
+S3_rq4_2 = lmer(scale(sharing) ~ factor(solved)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_Low3)
+
+# meta-analysis
+
+# estimate and standard error in a dataframe
+
+rq4_1 = data.frame(
+  estimate = c(fixef(S1_rq4_1)[2], fixef(S2_rq4_1)[2], fixef(S3_rq4_1)[2]),
+  std_error = c(summary(S1_rq4_1)$coefficients[, "Std. Error"][2], 
+                summary(S2_rq4_1)$coefficients[, "Std. Error"][2], 
+                summary(S3_rq4_1)$coefficients[, "Std. Error"][2]))
+
+rq4_2 = data.frame(
+  estimate = c(fixef(S1_rq4_2)[2], fixef(S2_rq4_2)[2], fixef(S3_rq4_2)[2]),
+  std_error = c(summary(S1_rq4_2)$coefficients[, "Std. Error"][2], 
+                summary(S2_rq4_2)$coefficients[, "Std. Error"][2], 
+                summary(S3_rq4_2)$coefficients[, "Std. Error"][2]))
+
+# meta-analysis
+
+res_rq4_1 = rma.uni(yi = rq4_1$estimate, sei = rq4_1$std_error, method = "REML")
+
+res_rq4_2 = rma.uni(yi = rq4_2$estimate, sei = rq4_2$std_error, method = "REML")
+
+
+forest(res_rq4_1)
+forest(res_rq4_2)
+```
+
+```{r, include=FALSE}
+#other explo analysis
+
+S1_rq5_1 = lmer(scale(sharing) ~ factor(solved)  + scale(insight)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_High1)
+S1_rq5_2 = lmer(scale(sharing) ~ factor(solved) + scale(insight)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_Low1)
+
+S2_rq5_1 = lmer(scale(sharing) ~ factor(solved) + scale(insight)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_High2)
+S2_rq5_2 = lmer(scale(sharing) ~ factor(solved) + scale(insight)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_Low2)
+
+S3_rq5_1 = lmer(scale(sharing) ~ factor(solved) + scale(insight)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_High3)
+S3_rq5_2 = lmer(scale(sharing) ~ factor(solved) + scale(insight)
+                + (1| stumpers) + (1 + factor(solved) | ResponseId),
+                data = data_Low3)
+
+# meta-analysis
+
+# estimate and standard error in a dataframe
+
+rq5_1 = data.frame(
+  estimate = c(fixef(S1_rq5_1)[2], fixef(S2_rq5_1)[2], fixef(S3_rq5_1)[2]),
+  std_error = c(summary(S1_rq5_1)$coefficients[, "Std. Error"][2], 
+                summary(S2_rq5_1)$coefficients[, "Std. Error"][2], 
+                summary(S3_rq5_1)$coefficients[, "Std. Error"][2]))
+
+rq5_2 = data.frame(
+  estimate = c(fixef(S1_rq5_2)[2], fixef(S2_rq5_2)[2], fixef(S3_rq5_2)[2]),
+  std_error = c(summary(S1_rq5_2)$coefficients[, "Std. Error"][2], 
+                summary(S2_rq5_2)$coefficients[, "Std. Error"][2], 
+                summary(S3_rq5_2)$coefficients[, "Std. Error"][2]))
+
+# meta-analysis
+
+res_rq5_1 = rma.uni(yi = rq5_1$estimate, sei = rq5_1$std_error, method = "REML")
+
+res_rq5_2 = rma.uni(yi = rq5_2$estimate, sei = rq5_2$std_error, method = "REML")
+
+
+forest(res_rq5_1)
+forest(res_rq5_2)
+```
+
+```{r, include=FALSE}
+# Replicate the main analyses for study 1-3 with only where participant solved the problems.
+
+S1_rq6_1 = lmer(scale(sharing) ~ scale(insight) + factor(ability_other) 
+                + log(time) + (1 |ResponseId) + (1 |stumpers),
+            data = data_High1[data_High1$solved == 1,], control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+
+S1_rq6_2 = lmer(scale(sharing) ~ scale(insight) + factor(ability_other) 
+                + log(time) + (1 |ResponseId) + (1 |stumpers),
+            data = data_Low1[data_Low1$solved == 1,], control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+S2_rq6_1 = lmer(scale(sharing) ~ scale(insight) + factor(ability_other) 
+                + log(time) + (1 |ResponseId) + (1 |stumpers),
+            data = data_High2[data_High2$solved == 1,], control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+S2_rq6_2 = lmer(scale(sharing) ~ scale(insight) + factor(ability_other) 
+                + log(time) + (1 |ResponseId) + (1 |stumpers),
+            data = data_Low2[data_Low2$solved == 1,], control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+S3_rq6_1 = lmer(scale(sharing) ~ scale(insight) + factor(ability_other) 
+                + log(time) + (1 |ResponseId) + (1 |stumpers),
+            data = data_High3[data_High3$solved == 1,], control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+S3_rq6_2 = lmer(scale(sharing) ~ scale(insight) + factor(ability_other) 
+                + log(time) + (1 |ResponseId) + (1 |stumpers),
+            data = data_Low3[data_Low3$solved == 1,], control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+S3_rq6_3 = lmer(scale(consume) ~ scale(insight) + factor(ability_other) 
+                + log(time) + (1 |ResponseId) + (1 |stumpers),
+            data = data_High3[data_High3$solved == 1,], control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+S3_rq6_4 = lmer(scale(consume) ~ scale(insight) + factor(ability_other) 
+                + log(time) + (1 |ResponseId) + (1 |stumpers),
+            data = data_Low3[data_Low3$solved == 1,], control = lmerControl(
+              optimizer ="bobyqa"
+            ))
+
+
+# plot the results of all the studies
+
+rq6_1 = data.frame(
+  estimate = c(fixef(S1_rq6_1)[2], fixef(S2_rq6_1)[2], fixef(S3_rq6_1)[2]),
+  std_error = c(summary(S1_rq6_1)$coefficients[, "Std. Error"][2], 
+                summary(S2_rq6_1)$coefficients[, "Std. Error"][2], 
+                summary(S3_rq6_1)$coefficients[, "Std. Error"][2]))
+
+rq6_2 = data.frame(
+  estimate = c(fixef(S1_rq6_2)[2], fixef(S2_rq6_2)[2], fixef(S3_rq6_2)[2]),
+  std_error = c(summary(S1_rq6_2)$coefficients[, "Std. Error"][2], 
+                summary(S2_rq6_2)$coefficients[, "Std. Error"][2], 
+                summary(S3_rq6_2)$coefficients[, "Std. Error"][2]))
+
+rq6_3 = data.frame(
+  estimate = c(fixef(S3_rq6_3)[2]),
+  std_error = c(summary(S3_rq6_3)$coefficients[, "Std. Error"][2]))
+
+rq6_4 = data.frame(
+  estimate = c(fixef(S3_rq6_4)[2]),
+  std_error = c(summary(S3_rq6_4)$coefficients[, "Std. Error"][2]))
+
+
+library(patchwork)
+# Add colors and place study on y-axis, adjust x-axis scale
+plot_rq6_1 <- ggplot(rq6_1, aes(x = estimate, y = factor(1:3))) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = estimate - std_error, xmax = estimate + std_error), height = 0.2) +
+  scale_x_continuous(limits = c(0, 0.8)) +
+  labs(title = "Sharing~Insight, \n High Condition (Study 1-3)", x = "Estimate", y = "Study") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+plot_rq6_2 <- ggplot(rq6_2, aes(x = estimate, y = factor(1:3))) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = estimate - std_error, xmax = estimate + std_error), height = 0.2) +
+  scale_x_continuous(limits = c(0, 0.8)) +
+  labs(title = "Sharing~Insight, \n Low Condition (Study 1-3)", x = "Estimate", y = "Study") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+plot_rq6_3 <- ggplot(rq6_3, aes(x = estimate, y = factor(1))) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = estimate - std_error, xmax = estimate + std_error), height = 0.2) +
+  scale_x_continuous(limits = c(0, 0.8)) +
+  labs(title = "Consumption~Insight, \n High Condition (Study 3)", x = "Estimate", y = "Study 3") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+plot_rq6_4 <- ggplot(rq6_4, aes(x = estimate, y = factor(1))) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = estimate - std_error, xmax = estimate + std_error), height = 0.2) +
+  scale_x_continuous(limits = c(0, 0.8)) +
+  labs(title = "Consumption~Insight, \n Low Condition (Study 3)", x = "Estimate", y = "Study 3") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+# Combine the plots using patchwork
+combined_plot <- (plot_rq6_1 + plot_rq6_2) / (plot_rq6_3 + plot_rq6_4)
+
+# Display the combined plot
+print(combined_plot)
+```
+
+```{r})
+
+```
 
