@@ -40,9 +40,9 @@ Here, we present the pre-registered materials used.
 
 ## Insight Instruction
 
-We explained the concept of insight or "Aha experience" to the participants using this pre-tested wording:
+For the whodunits studies, we explained the concept of insight or "Aha experience" to the participants using this pre-tested wording. The instruction for the riddles studies are available in the main text.
 
-*"We will present you with a series of brain teasers. For each, we would like to know whether you experienced a feeling of insight when you solve each task: A feeling of insight is a kind of"Aha!" characterized by suddenness and obviousness (and often relief!)---like a revelation. By contrast, you experienced no Aha! if the solution occurs to you slowly and stepwise. As an example, imagine a lightbulb that is switched on all at once in contrast to slowly dimming it up. We ask for your subjective rating whether it felt like an Aha! experience or not, there is no right or wrong answer. Just follow your intuition."*
+*"We will present you with several short detective fictions. For each, we would like to know whether you experienced a feeling of insight.When solving a problem or reading something, a feeling of insight is a kind of “Aha!”(or Eureka !) characterized by suddenness, obviousness and often relief —like a revelation. By contrast, you experience no insight if the solution occurs to you slowly and stepwise.Insight is different from surprise because it leads you to revise how you perceived the situation, and to understand it better. We ask for your subjective rating whether it felt like an Aha! experience or not, there is no right or wrong answer. Just follow your intuition."*
 
 ## Questions asked
 
@@ -2613,7 +2613,9 @@ forest(res_rq5_1)
 forest(res_rq5_2)
 ```
 
-```{r, include=FALSE}
+**RQ4**: Does the results hold when considering only self-generated insight solutions? 
+
+```{r}
 # Replicate the main analyses for study 1-3 with only where participant solved the problems.
 
 S1_rq6_1 = lmer(scale(sharing) ~ scale(insight) + factor(ability_other) 
@@ -2734,7 +2736,4 @@ combined_plot <- (plot_rq6_1 + plot_rq6_2) / (plot_rq6_3 + plot_rq6_4)
 print(combined_plot)
 ```
 
-```{r})
-
-```
 

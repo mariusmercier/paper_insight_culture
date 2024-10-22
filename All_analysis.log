@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.11.11)  29 APR 2024 09:40
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.11.11)  22 OCT 2024 11:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -954,7 +954,7 @@ Missing character: There is no ︠ (U+FE20) in font [lmroman10-regular]:mapping=
 Missing character: There is no ︡ (U+FE21) in font [lmroman10-regular]:mapping=tex-text;!
 [8] [9] [10] [11] [12] [13]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 710.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 713.
 [14] [15] [16] [17] [18] [19] [20] [21
 
 ] [22] [23
@@ -967,9 +967,12 @@ LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[49] [50] [51
+[49] [50]
+File: All_analysis_files/figure-latex/unnamed-chunk-78-1.pdf Graphic file (type pdf)
+<use All_analysis_files/figure-latex/unnamed-chunk-78-1.pdf>
+[51
 
-] (./All_analysis.aux)
+] [52] (./All_analysis.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-01>
@@ -978,12 +981,12 @@ Package rerunfilecheck Info: File `All_analysis.out' has not changed.
 (rerunfilecheck)             Checksum: 787E2856549E3045CD873913428888C0;2293.
  ) 
 Here is how much of TeX's memory you used:
- 24089 strings out of 476934
- 476687 string characters out of 5805171
+ 24099 strings out of 476934
+ 477237 string characters out of 5805171
  1996164 words of memory out of 5000000
- 45627 multiletter control sequences out of 15000+600000
+ 45635 multiletter control sequences out of 15000+600000
  564602 words of font info for 87 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  90i,13n,120p,571b,907s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on All_analysis.pdf (51 pages).
+Output written on All_analysis.pdf (52 pages).
